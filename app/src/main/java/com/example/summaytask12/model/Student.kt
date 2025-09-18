@@ -1,16 +1,29 @@
 package com.example.summaytask12.model
 
-import android.location.Address
+import com.example.summaytask12.interfaces.Enrollable
 
 class Student(
     id: Int,
     name: String,
     age: Int,
     var gpa: Double,
-    enroledCourses: MutableList<Course>,
 ) : UniversityMember(id, name, age), Enrollable {
 
     private val enrolledCourses = mutableListOf<Course>()
+
+    init {
+        println("Họ tên: $name, Tuổi: $age , Mã sinh viên: $id")
+    }
+
+    //Vì trong class nó ko tự sinh ra toString nên cần override để nó có thể in ra sinh viên theo mẫu :
+    override fun toString(): String {
+        return "Student(id=$id, name=$name, age=$age, gpa=$gpa)"
+    }
+
+    var address:String=""
+    constructor(id: Int, name: String, age: Int, gpa: Double,address: String) : this(id, name, age, gpa){
+        this.address=address
+    }
 
     override fun getRole() = "Student"
 
@@ -27,27 +40,15 @@ class Student(
             enrolledCourses.forEach { println("- ${it.courseName}") }
         }
     }
+    fun getEnrolledCourses(): List<Course> = enrolledCourses.toList()
 
+
+    override fun showInfo() {
+        super.showInfo()
+        println("GPA: $gpa")
+        println("Số môn đã đăng ký: ${enrolledCourses.size}")
+    }
 
 }
-
-// Extension Function
-fun Student.isScholarship(): String {
-    return if (gpa >= 3.5) "Scholarship" else "No Scholarship"
-}
-
-fun String.capitalizeFirst(): String {
-    return if (this.isNotEmpty()) this[0].uppercase() + this.substring(1) else this
-}
-
-fun String.reverseString(): String {
-    return this.reversed()
-}
-
-fun String.lengthString(): Int {
-    return this.length
-}
-
-
 
 

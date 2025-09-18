@@ -1,6 +1,6 @@
 package com.example.summaytask12.model
 
-import javax.security.auth.Subject
+import com.example.summaytask12.interfaces.Gradable
 
 class Teacher(
     id: Int,
@@ -10,11 +10,16 @@ class Teacher(
     var salary: Double? = null
 ) : UniversityMember(id, name, age), Gradable {
 
+    override fun toString(): String {
+        return "Teacher(id=$id, name=$name, age=$age, subject =$subject , salary=$salary)"
+    }
+    private val taughtCourses = mutableListOf<Course>()
     override fun getRole() = "Teacher"
 
     override fun grade(student: Student, course: Course, grade: Double) {
         println("GV $name chấm cho SV ${student.name} môn ${course.courseName}: $grade điểm")
     }
+
     override fun showInfo() {
         println("ID: $id")
         println("Name: $name")
@@ -22,9 +27,13 @@ class Teacher(
         println("Subject: $subject")
 
     }
-    fun updateSalary(newSalary: String) {
-        subject = newSalary
+
+    fun assignCourse(course: Course) {
+        taughtCourses.add(course)
+        println("Giáo viên $name được phân công dạy môn ${course.courseName}")
     }
+
+    fun getTaughtCourses(): List<Course> = taughtCourses.toList()
 }
 
 
