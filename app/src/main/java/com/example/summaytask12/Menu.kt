@@ -1,17 +1,24 @@
 package com.example.summaytask12
 
 import com.example.summaytask12.enum.AgeRange
+import com.example.summaytask12.enum.StatusSchedule
+import com.example.summaytask12.model.Classroom
 import com.example.summaytask12.model.Course
 import com.example.summaytask12.model.Student
 import com.example.summaytask12.model.Teacher
+import com.example.summaytask12.system.DataClass.classrooms
 import com.example.summaytask12.system.DataClass.courses
+import com.example.summaytask12.system.DataClass.sampleSchedule
+import com.example.summaytask12.system.DataClass.sampleSchedule2
 import com.example.summaytask12.system.DataClass.students
 import com.example.summaytask12.system.DataClass.teachers
 import com.example.summaytask12.system.UniversityManager
+import kotlinx.coroutines.runBlocking
 
 fun main() {
     val universityManager = UniversityManager()
     createData(universityManager)
+
     var select: Int
     var addressString: String = "Hòa Bình"
     var numberId: Int = 1
@@ -25,6 +32,7 @@ fun main() {
     var age: Int = 20
     var gpa: Double = 3.5
     var address: String = "Hòa Bình"
+    var idSchedule: Int = 0
     do {
         getList()
         select = readln().toIntOrNull() ?: 0
@@ -66,13 +74,15 @@ fun main() {
             gpa = readln().toDouble()
             address = readln().toString()
         }
-        if (select==26){
+        if (select == 26) {
             println("Nhập tên cần tìm kiếm :")
-            name= readln().toString()
+            name = readln().toString()
             universityManager.findStudentsByName(name)
         }
-
-
+        if (select == 29) {
+            println("Nhập địa chỉ đăng kí phonòng học cần xóa")
+            idSchedule = readln().toInt()
+        }
         when (select) {
             1 -> universityManager.addStudent(Student(id, name, age, gpa, address))
             2 -> universityManager.displayAllStudents()
@@ -94,29 +104,43 @@ fun main() {
             18 -> universityManager.createSampleStudent()
             19 -> println(universityManager.performUniversityAudit())
             20 -> universityManager.duplicateTest(students)
-            21 -> universityManager.studentClassification(students)
+            21 -> universityManager.conditionClassification(students)
             22 -> println(universityManager.getgroupsOfTeachersBySubject())
             23 -> students.forEach { it.listCourses() }
             24 -> universityManager.addressCheck(students, addressString)
-            25 -> universityManager.updateStudent(studentId, Student(id, name, age, gpa, address))
-            26-> println(universityManager.findStudentsByName(name))
-
+            25 -> universityManager.updateStudent(
+                updateStudentId,
+                Student(id, name, age, gpa, address)
+            )
+            26 -> println(universityManager.findStudentsByName(name))
+            27 -> printListClassroom(universityManager)
+            28 -> printListSchedules(universityManager)
+            29 -> universityManager.cancelSchedule(idSchedule)
+            30 ->universityManager.createSchedule(sampleSchedule2)
+            31 -> getClassroomsIsEmpty(universityManager)
             else -> println("Lựa chọn không hợp lệ")
         }
-
     } while (select != 0)
 }
 
-fun createData(universityManager: UniversityManager) {
+fun enterValue() {
+    println("Nhập Id cần cập nhật :")
+    val updateStudentId = readln().toInt()
+    println("Nhập thông tin cần cập nhật :")
+    val id = readln().toInt()
+    val name = readln().toString()
+    val age = readln().toInt()
+    val gpa = readln().toDouble()
+    val address = readln().toString()
+}
 
+fun createData(universityManager: UniversityManager) {
     //tạo môn học
     universityManager.addCourses(courses)
     //Thuê giáo viên
     universityManager.hireTeacher(teachers)
     //Thêm sinh viên
     universityManager.registerStudent(students)
-
-
 
     // Sinh viên đăng ký môn học
     students[0].enrollStudent(courses[0])
@@ -136,6 +160,10 @@ fun createData(universityManager: UniversityManager) {
     teachers[1].grade(students[1], courses[3], 5.5)
     println("\n")
 
+    classrooms.forEach { universityManager.addClassroom(it) }
+
+    // Tạo lịch học mẫu
+    universityManager.addSchedules(sampleSchedule)
 }
 
 fun getList() {
@@ -165,6 +193,11 @@ fun getList() {
     println("24.Tim kiếm sinh viên theo địa chir")
     println("25.Cập nhật sinh viên")
     println("26.Tìm kiếm sinh viên theo tên")
+    println("27. Quản lý Phòng học")
+    println("28. Quản lý Lịch học")
+    println("29. Hủy đăng kí phòng học")
+    println("30. Đăng kí phòng học")
+    println("31. Kiểm tra lớp còn trống")
     println("0.Thoát")
     print("Nhập lựa chọn :")
 }
@@ -212,8 +245,53 @@ fun getStudentsEligibleForGraduation(
     students: List<Student>,
     universityManager: UniversityManager
 ) {
-    println(universityManager.getStudentsEligibleForGraduation(students).toString())
+    runBlocking {
+        val graduatedStudents = universityManager.processGraduationAsync(students).toString()
+        println(graduatedStudents)
+    }
 }
+
+fun printListClassroom(universityManager: UniversityManager) {
+    println("Quản lí phòng học")
+    println("Danh sách phòng học:")
+    var getClassrooms = universityManager.getClassrooms()
+    getClassrooms.forEachIndexed { index, room ->
+        println("${index + 1}. Phòng ${room.roomNumber} (Sức chứa: ${room.capacity}) - Tiện nghi: ${room.facilities.joinToString()} -Trạng thái :${room.status}")
+    }
+    println("Tổng số phòng: ${classrooms.size}")
+}
+
+
+fun printListSchedules(universityManager: UniversityManager) {
+    if (universityManager.getSchedules().isNotEmpty()) {
+        println("Danh sách lịch học:")
+        universityManager.getSchedules().forEachIndexed { index, schedule ->
+            println("${index + 1}. ")
+            schedule.displaySchedule()
+        }
+    } else {
+        println("Chưa có lịch học nào được tạo")
+    }
+}
+
+fun getClassroomsIsEmpty(universityManager: UniversityManager){
+    universityManager.getClassroomsIsEmpty(
+        condition = { cl -> cl.status == StatusSchedule.DRUM },
+        action = { cl -> println("Phòng TRỐNG: ${cl.roomNumber}, Sức chứa: ${cl.capacity}, Tiện nghi: ${cl.facilities.joinToString()}, Trạng thái: ${cl.status}") }
+    )
+    universityManager.getClassroomsIsEmpty(
+        condition = { cl -> cl.status == StatusSchedule.CANCELED },
+        action = { cl -> println("Phòng ĐÃ HỦY LỊCH: ${cl.roomNumber}, Sức chứa: ${cl.capacity}, Tiện nghi: ${cl.facilities.joinToString()}, Trạng thái: ${cl.status}") }
+    )
+}
+
+
+
+
+
+
+
+
 
 
 

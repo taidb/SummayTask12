@@ -4,11 +4,11 @@ Hệ thống cho phép sinh viên đăng ký nhiều môn học, giáo viên đ�
 đồng thời cung cấp các chức năng thống kê – tính toán để hỗ trợ nhà trường.
 
 2. Thành phần chính
-   Sinh viên (Student) có các thuộc tính :
-   -Mã sinh viên
-   -Tên sinh viên
-   -Tuổi
-   -GPA
+Sinh viên (Student) có các thuộc tính :
+-Mã sinh viên
+-Tên sinh viên
+-Tuổi
+-GPA
 Có thể đăng ký nhiều môn học.
 Nhận điểm từ giáo viên.
 

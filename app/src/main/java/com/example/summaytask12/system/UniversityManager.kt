@@ -1,16 +1,20 @@
 package com.example.summaytask12.system
 
 import com.example.summaytask12.enum.AgeRange
+import com.example.summaytask12.enum.StatusSchedule
 import com.example.summaytask12.extensions.calculateAnnualSalary
 import com.example.summaytask12.extensions.calculateTuition
 import com.example.summaytask12.extensions.capitalizeFirst
 import com.example.summaytask12.extensions.filterEligibleForGraduation
+import com.example.summaytask12.extensions.getGradeLevel
 import com.example.summaytask12.extensions.getTotalCredits
 import com.example.summaytask12.extensions.sortByGPADescending
+import com.example.summaytask12.model.Classroom
 import com.example.summaytask12.model.Course
-import com.example.summaytask12.model.Enrollment
+import com.example.summaytask12.model.Schedule
 import com.example.summaytask12.model.Student
 import com.example.summaytask12.model.Teacher
+import kotlinx.coroutines.delay
 import kotlin.random.Random
 
 class UniversityManager {
@@ -18,7 +22,98 @@ class UniversityManager {
     private val courses = mutableListOf<Course>()
     private val students = mutableListOf<Student>()
     private val teachers = mutableListOf<Teacher>()
+    private val classrooms = mutableListOf<Classroom>()
+    private val schedules = mutableListOf<Schedule>()
 
+
+    fun addClassroom(classroom: Classroom) {
+        if (classrooms.none { it.roomId == classroom.roomId }) {
+            classrooms.add(classroom)
+            println("Đã thêm phòng học: ${classroom.roomNumber}")
+        } else {
+            println("Phòng học với ID ${classroom.roomId} đã tồn tại!")
+        }
+    }
+
+    fun addSchedules(schedule: List<Schedule>) {
+        schedules.addAll(schedule)
+    }
+
+    fun createSchedule(scheduleRequest: Schedule) {
+        val existingClassroom = classrooms.find { it.roomId == scheduleRequest.classroom.roomId }
+        if (existingClassroom == null) {
+            println("${scheduleRequest.classroom.roomNumber} không tồn tại trong hệ thống.")
+            return
+        }
+
+        if (scheduleRequest.teacher.subject != scheduleRequest.course.courseName) {
+            println("Giáo viên ${scheduleRequest.teacher.name} không được phân công dạy môn ${scheduleRequest.course.courseName}.")
+            return
+        }
+
+        val conflictingSchedule = schedules.firstOrNull {
+            it.classroom.roomId == existingClassroom.roomId &&
+                    it.dayOfWeek == scheduleRequest.dayOfWeek &&
+                    it.startTime == scheduleRequest.startTime &&
+                    it.classroom.status == StatusSchedule.SCHEDULED
+        }
+
+        if (conflictingSchedule != null) {
+            println(
+                "Phòng ${existingClassroom.roomNumber} đã được xếp lịch cho môn " +
+                        "${conflictingSchedule.course.courseName} (GV: ${conflictingSchedule.teacher.name}) " +
+                        "vào Thứ ${scheduleRequest.dayOfWeek + 1}, lúc ${scheduleRequest.startTime}."
+            )
+            return
+        }
+
+        existingClassroom.status = StatusSchedule.SCHEDULED
+
+        val newScheduleEntry = scheduleRequest.copy(
+            classroom = existingClassroom
+        )
+
+        schedules.add(newScheduleEntry)
+        println(
+            "Đã tạo lịch học mới thành công: " +
+                    "${newScheduleEntry.teacher.name} - ${newScheduleEntry.course.courseName} " +
+                    "- Phòng ${newScheduleEntry.classroom.roomNumber}" +
+                    " (Trạng thái phòng: ${newScheduleEntry.classroom.status})"
+        )
+    }
+
+    private fun findScheduleById(id: Int): Schedule? {
+        return schedules.find { it.id == id }
+    }
+
+    fun cancelSchedule(scheduleId: Int) {
+        val schedule = findScheduleById(scheduleId)
+        if (schedule != null) {
+            schedules.remove(schedule)
+            schedule.classroom.status = StatusSchedule.CANCELED
+            println("Đã hủy lịch học cho môn ${schedule.course.courseName}")
+        } else {
+            println("Không tìm thấy sinh viên với ID: $scheduleId")
+        }
+    }
+
+    // Lấy danh sách lịch học
+    fun getSchedules(): List<Schedule> {
+        return schedules
+    }
+
+    // Lấy danh sách phòng học
+    fun getClassrooms(): List<Classroom> {
+        return classrooms
+    }
+
+    // Higher-order function
+    fun getClassroomsIsEmpty(condition: (Classroom) -> Boolean, action: (Classroom) -> Unit) {
+        println(classrooms.filter(condition).forEach(action))
+    }
+//    fun getClassroomsIsEmpty() {
+//        println(classrooms.filter {(it.status == StatusSchedule.DRUM || it.status == StatusSchedule.CANCELED) })
+//    }
 
     fun addCourses(course: List<Course>) {
         courses.addAll(course)
@@ -46,7 +141,7 @@ class UniversityManager {
         }
     }
 
-    fun findStudentById(id: Int): Student? {
+    private fun findStudentById(id: Int): Student? {
         return students.find { it.id == id }
     }
 
@@ -167,9 +262,9 @@ class UniversityManager {
         println(students.sortByGPADescending().take(limit).joinToString("\n"))
     }
 
-    fun getStudentsEligibleForGraduation(students: List<Student>) {
-        students.filterEligibleForGraduation(MIN_GPA_FOR_GRADUATION).forEach { println(it) }
-    }
+//    fun getStudentsEligibleForGraduation(students: List<Student>) {
+//        students.filterEligibleForGraduation(MIN_GPA_FOR_GRADUATION).forEach { println(it) }
+//    }
 
     fun processGraduation() {
         // Sử dụng for loop với range
@@ -334,6 +429,24 @@ class UniversityManager {
             }
         }
     }
+
+    fun conditionClassification(students: List<Student>) {
+        println("Phân loại sinh viên theo điểm GPA:")
+        for (student in students) {
+            val gradeLevel = student.getGradeLevel()
+            // In ra tên sinh viên và nhãn của xếp loại
+            println("Sinh viên ${student.name} (${student.gpa}): ${gradeLevel.label}")
+        }
+    }
+
+    suspend fun processGraduationAsync(students: List<Student>) {
+        println("Đang xử lý tốt nghiệp...")
+        // Giả lập delay
+        delay(3000)
+        println(
+            students.filterEligibleForGraduation(MIN_GPA_FOR_GRADUATION).forEach { println(it) })
+    }
+
 
     companion object {
         const val MIN_GPA_FOR_GRADUATION = 2.0
