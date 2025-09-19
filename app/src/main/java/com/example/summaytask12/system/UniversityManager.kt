@@ -50,11 +50,13 @@ class UniversityManager {
             println("Giáo viên ${scheduleRequest.teacher.name} không được phân công dạy môn ${scheduleRequest.course.courseName}.")
             return
         }
+        if (scheduleRequest.classroom.status==StatusSchedule.SCHEDULED){
+            println("Phòng đã có người đăng kí")
+            return
+        }
 
         val conflictingSchedule = schedules.firstOrNull {
-            it.classroom.roomId == existingClassroom.roomId &&
-                    it.dayOfWeek == scheduleRequest.dayOfWeek &&
-                    it.startTime == scheduleRequest.startTime &&
+            it.classroom.roomId == existingClassroom.roomId
                     it.classroom.status == StatusSchedule.SCHEDULED
         }
 
@@ -67,7 +69,10 @@ class UniversityManager {
             return
         }
 
-        existingClassroom.status = StatusSchedule.SCHEDULED
+
+
+            existingClassroom.status = StatusSchedule.SCHEDULED
+
 
         val newScheduleEntry = scheduleRequest.copy(
             classroom = existingClassroom
