@@ -30,6 +30,7 @@ class Student(
     override fun enrollStudent(course: Course) {
         enrolledCourses.add(course)
         println("$name đã đăng ký môn ${course.courseName}")
+
     }
 
     override fun listCourses() {

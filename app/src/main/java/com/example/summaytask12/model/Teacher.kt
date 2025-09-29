@@ -33,7 +33,8 @@ class Teacher(
         println("Giáo viên $name được phân công dạy môn ${course.courseName}")
     }
 
-    fun getTaughtCourses(): List<Course> = taughtCourses.toList()
+
+
 }
 
 

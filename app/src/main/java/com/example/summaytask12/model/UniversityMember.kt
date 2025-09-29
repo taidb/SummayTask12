@@ -9,10 +9,6 @@ abstract class UniversityMember(id: Int, name: String, age: Int) :
         println("Age: $age")
     }
 
-    override fun showSubject(subject: String) {
-        super.showSubject(subject)
-    }
-
     override fun showInfoName() {
         println("Tên là $name và năm sinh là $age")
     }
