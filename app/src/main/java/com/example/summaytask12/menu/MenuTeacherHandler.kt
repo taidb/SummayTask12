@@ -16,14 +16,16 @@ class MenuTeacherHandler(
         println("5. Kiểm tra đại học")
         println("6.Tìm kiếm giáo viên theo Id")
         println("0. Thoát")
-        print("Nhập lựa chọn: ")
+
     }
 
     fun handleSelection() {
         var selection :Int
         do {
-            selection = InputHandler.getMenuSelection()
+
             displayMainTeacherMenu()
+            print("Nhập lựa chọn: ")
+            selection = InputHandler.getMenuSelection()
             when (selection) {
                 1 -> {
                     teachersManager.displayAllTeachers()

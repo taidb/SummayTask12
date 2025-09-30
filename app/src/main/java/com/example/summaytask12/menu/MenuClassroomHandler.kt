@@ -21,13 +21,13 @@ class MenuClassroomHandler(
         println("6. In danh sách môn học")
         println("7. Thống kê môn học")
         println("0. Thoát")
-        print("Nhập lựa chọn: ")
     }
 
     fun handleSelection() {
         var selection: Int
         do {
             displayMenu()
+            print("Nhập lựa chọn: ")
             selection = InputHandler.getMenuSelection()
             when (selection) {
                 1 -> {

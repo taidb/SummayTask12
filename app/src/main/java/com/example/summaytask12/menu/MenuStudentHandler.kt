@@ -33,13 +33,14 @@ class MenuStudentHandler(
         println("19.Tổng số tỉn chỉ sinh viên")
         println("20.Kiểm tra tình trạng sinh viên : Học bổng ,Cảnh cáo")
         println("0. Thoát")
-        print("Nhập lựa chọn: ")
     }
 
     fun handleSelection() {
         var selection: Int
         do {
+
             displayMainStudentMenu()
+            print("Nhập lựa chọn: ")
             selection = InputHandler.getMenuSelection()
             when (selection) {
                 1 -> {

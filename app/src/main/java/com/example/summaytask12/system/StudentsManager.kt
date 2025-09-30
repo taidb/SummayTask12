@@ -1,5 +1,6 @@
 package com.example.summaytask12.system
 
+import com.example.summaytask12.addItem
 import com.example.summaytask12.enum.AgeRange
 import com.example.summaytask12.extensions.calculateTuition
 import com.example.summaytask12.extensions.dultStudents
@@ -18,14 +19,15 @@ class StudentsManager {
     private val students = mutableListOf<Student>()
 
     fun registerStudent(student: List<Student>) {
-        for (i in student.indices) {
-            if (students.any { it.id == student[i].id }) {
-                println("Sinh viên với ID ${student[i].id} đã tồn tại!")
-            } else {
-                students.add(student[i])
-                println("Đã đăng ký sinh viên: ${student[i].name}")
-            }
-        }
+        addItem(students, student) { a, b -> a.id == b.id }
+//        for (i in student.indices) {
+//            if (students.any { it.id == student[i].id }) {
+//                println("Sinh viên với ID ${student[i].id} đã tồn tại!")
+//            } else {
+//                students.add(student[i])
+//                println("Đã đăng ký sinh viên: ${student[i].name}")
+//            }
+//        }
     }
 
     private fun findStudentById(id: Int): Student? {

@@ -1,4 +1,5 @@
 package com.example.summaytask12.system
+import com.example.summaytask12.addItem
 import com.example.summaytask12.extensions.calculateAnnualSalary
 import com.example.summaytask12.extensions.capitalizeFirst
 import com.example.summaytask12.model.Teacher
@@ -9,15 +10,15 @@ class TeachersManager {
     private val teachers = mutableListOf<Teacher>()
 
     fun hireTeacher(teacher: List<Teacher>) {
-//        addItem<Teacher>(teachers,teacher)
-        for (tea in teacher) {
-            if (teachers.any { it.id == tea.id }) {
-                println("Sinh viên với ID ${tea.id} đã tồn tại!")
-            } else {
-                teachers.addAll(listOf(tea))
-                println("Đã đăng ký sinh viên: ${tea.name}")
-            }
-        }
+        addItem(teachers, teacher) { a, b -> a.id == b.id }
+//        for (tea in teacher) {
+//            if (teachers.any { it.id == tea.id }) {
+//                println("Sinh viên với ID ${tea.id} đã tồn tại!")
+//            } else {
+//                teachers.addAll(listOf(tea))
+//                println("Đã đăng ký sinh viên: ${tea.name}")
+//            }
+//        }
     }
 
     fun displayAllTeachers() {
