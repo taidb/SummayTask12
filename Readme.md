@@ -43,6 +43,7 @@ Quản lý Sinh viên:
   + Thêm, sửa, xóa thông tin sinh viên.
 
 Quản lý Giáo viên
+  + Cập nhật thông tin giáo viên: thêm, sửa ,xóa
   + Phân công giảng dạy môn học.
   + Chấm điểm cho sinh viên.
   + Đăng kí phòng học.
@@ -77,4 +78,72 @@ Thống kê & Tính toán
 + Đăng kí phòng học
 + Kiểm tra lớp còn trống
 
+Các kiến thức đã ứng dụng trong bài toán trên:
+**1. Cú pháp cơ bản của Kotlin**
 
+- Biến & Hằng số
+- Kiểu dữ liệu (Int, Float, Boolean, String, Char, Double, Long)
+- Toán tử (+, -, *, /, %, +=, -=, ==, !=, >, <, &&, ||)
+- Ép kiểu (toInt(), toString(), toDouble(),...)
+- Chuỗi & String Template ("Hello, $name")
+
+**2. Cấu trúc điều kiện và vòng lặp**
+
+- If - Else
+- When 
+- For Loop (for (i in 1..10) { })
+- While & Do-While Loop ,....
+
+**3. Collection (Danh sách dữ liệu)**
+
+- List (Danh sách)
+- Set (Tập hợp không trùng lặp)
+- Map (Dạng key-value)
+- Các hàm quan trọng trong Collection
+
+map(), filter(), reduce(),
+forEach(), first(), last(), ...
+
+**4. Hàm & Extension Function**
+
+- Hàm thông thường
+- Hàm một dòng
+- Default Parameter & Named Argument
+- Extension Function
+
+**5. Null Safety (An toàn với null)**
+
+- Nullable (?) và Non-nullable
+- Elvis Operator (?:)
+- Safe Call (?.)
+
+**6. Lập trình hướng đối tượng (OOP) trong Kotlin**
+
+- Class & Object
+- Constructor (Primary & Secondary)
+- Kế thừa (open class, override)
+- Interface & Abstract Class
+- Data Class
+- Singleton & Companion Object
+
+**7. Higher-Order Function & Lambda**
+
+- Hàm là tham số của hàm khác
+- Lambda Expression ({ x, y -> x + y })
+- Inline Function
+- Higher-Order Function (fun operation(a: Int, b: Int, action: (Int, Int) -> Int))
+
+**8. Coroutine (Lập trình bất đồng bộ)**
+
+- Suspend Function (suspend fun fetchData())
+- Launch & Async
+- Dispatcher (Dispatchers.Main, [Dispatchers.IO](http://dispatchers.io/))
+- Scope (GlobalScope, CoroutineScope)
+
+**9. Các kiến thức nâng cao**
+
+- Sealed Class & Enum Class
+- Generics (fun <T> add(a: T, b: T))
+
+![img.png](img.png)
+![img_1.png](img_1.png)
