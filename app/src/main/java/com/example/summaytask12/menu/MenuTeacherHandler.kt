@@ -3,14 +3,11 @@ package com.example.summaytask12.menu
 import com.example.summaytask12.system.DataClass.teachers
 import com.example.summaytask12.system.InputHandler
 import com.example.summaytask12.system.TeachersManager
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class MenuTeacherHandler(
     private val teachersManager: TeachersManager,
 ) {
-    private val scope = CoroutineScope(Dispatchers.Default)
     private fun displayMainTeacherMenu() {
         println("\n=== HỆ THỐNG QUẢN LÝ GIÁO VIÊN TRƯỜNG HỌC ===")
         println("1. In danh sách giáo viên")
@@ -25,16 +22,16 @@ class MenuTeacherHandler(
         println("0. Thoát")
 
     }
-
-    fun handleSelection() {
+    fun handleSelection() = runBlocking {
         var selection: Int
         do {
             displayMainTeacherMenu()
             print("Nhập lựa chọn: ")
             selection = InputHandler.getMenuSelection()
+            println()
             when (selection) {
                 1 -> {
-                    scope.launch { teachersManager.getAll() }
+                    teachersManager.getAll()
                 }
 
                 2 -> {
@@ -54,27 +51,23 @@ class MenuTeacherHandler(
                 }
 
                 6 -> {
-                    scope.launch { teachersManager.getByName(InputHandler.getStringInput("Nhập tên giáo viên:")) }
+                    teachersManager.getByName(InputHandler.getStringInput("Nhập tên giáo viên:"))
                 }
 
                 7 -> {
-                    scope.launch {
-                        teachersManager.updateTeacher(
-                            InputHandler.getIntInput("Nhập id giáo viên:"),
-                            InputHandler.getDoubleInput("Nhập lương cần cập nhật"),
-                            InputHandler.getStringInput("Nhập môn học:"),
-                        )
-                    }
+                    teachersManager.updateTeacher(
+                        InputHandler.getIntInput("Nhập id giáo viên:"),
+                        InputHandler.getDoubleInput("Nhập lương cần cập nhật"),
+                        InputHandler.getStringInput("Nhập môn học:"),
+                    )
                 }
 
                 8 -> {
-                    val id = InputHandler.getIntInput("Nhập id giáo viên cần cập nhật")
-                    scope.launch { updateTeacher(id, teachersManager) }
+                    updateTeacher(teachersManager)
                 }
 
                 9 -> {
-                    val id = InputHandler.getIntInput("Nhập id giáo viên cần xóa")
-                    scope.launch { deleteTeacher(id, teachersManager) }
+                    deleteTeacher(teachersManager)
                 }
 
                 0 -> {
@@ -93,14 +86,26 @@ class MenuTeacherHandler(
         println(teachersManager.getTeacherSalary(id))
     }
 
-    private suspend fun updateTeacher(id: Int, teachersManager: TeachersManager) {
-        println("Nhập thông tin giáo viên cần update:")
-        val teacher = InputHandler.getTeacherInput()
-        teachersManager.update(id, teacher)
+    private suspend fun updateTeacher(teachersManager: TeachersManager) {
+        val id = InputHandler.getIntInput("Nhập id giáo viên cần cập nhật")
+        val idTeacher= teachersManager.getIdTeacher(id)
+        if (id ==idTeacher){
+            println("Nhập thông tin giáo viên cần update:")
+            val teacher = InputHandler.getTeacherInput()
+            teachersManager.update(id, teacher)
+        }else{
+            println("Không tìm thấy thông tin cần update")
+        }
     }
 
-    private suspend fun deleteTeacher(id: Int, teachersManager: TeachersManager) {
-        teachersManager.delete(id)
+    private suspend fun deleteTeacher(teachersManager: TeachersManager) {
+        val id = InputHandler.getIntInput("Nhập id giáo viên cần xóa")
+        val idTeacher= teachersManager.getIdTeacher(id)
+        if (id ==idTeacher){
+            teachersManager.delete(id)
+        }else{
+            println("Không tìm thấy thông tin cần xóa")
+        }
     }
 
 }

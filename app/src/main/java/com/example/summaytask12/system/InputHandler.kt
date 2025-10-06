@@ -20,9 +20,18 @@ object InputHandler {
         return readln().toDoubleOrNull() ?: 0.0
     }
 
+    private fun isValidString(input: String): Boolean {
+        return input.matches(Regex("^[a-zA-ZÀ-ỹ\\s]+$"))
+    }
+
     fun getStringInput(prompt: String): String {
         println(prompt)
-        return readln()
+        return if (isValidString(readln())) {
+            readln()
+        } else {
+            println("Vui lòng nhập lại thông tin")
+            getStringInput(prompt)
+        }
     }
 
     fun getStudentInput(): Student {

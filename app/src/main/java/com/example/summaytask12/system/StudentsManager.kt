@@ -76,6 +76,11 @@ class StudentsManager : BaseInterface<Student> {
 //        }
 //    }
 
+    fun getIdStudent(id: Int) : Int? {
+        val foundStudent=students.find { it.id==id }
+        return foundStudent?.id
+    }
+
     fun getTopPerformingStudents(limit: Int = 5) {
         println("In danh sách sinh viên xếp loại giỏi và xuất sắc")
         println(students.sortByGPADescending().take(limit).joinToString("\n"))
@@ -198,6 +203,15 @@ class StudentsManager : BaseInterface<Student> {
         }
     }
 
+    private fun getScholarship(status: StatusStudent){
+        when(status){
+            is StatusStudent.Scholarship -> println(status.message)
+            is StatusStudent.Warning -> println(status.message)
+            is StatusStudent.Normal -> println(status.message)
+
+        }
+    }
+
     fun scholarshipStudents(students: List<Student>) {
         for (student in students) {
             if (student.gpa >= 3.5) {
@@ -207,15 +221,6 @@ class StudentsManager : BaseInterface<Student> {
             } else {
                 getScholarship(StatusStudent.Normal("Sinh viên ${student.name} không được học bổng"))
             }
-        }
-    }
-
-    private fun getScholarship(status: StatusStudent){
-        when(status){
-            is StatusStudent.Scholarship -> println(status.message)
-            is StatusStudent.Warning -> println(status.message)
-            is StatusStudent.Normal -> println(status.message)
-
         }
     }
 

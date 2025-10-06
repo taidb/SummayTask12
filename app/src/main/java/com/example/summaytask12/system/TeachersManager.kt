@@ -40,6 +40,12 @@ class TeachersManager : BaseInterface<Teacher> {
 //        }
 //    }
 
+
+    fun getIdTeacher(id: Int) : Int? {
+       val foundTeacher=teachers.find { it.id==id }
+        return foundTeacher?.id
+    }
+
     // 5. NULL SAFETY
     fun getTeacherSalary(teacherId: Int): String {
         val teacher = teachers.firstOrNull { it.id == teacherId }

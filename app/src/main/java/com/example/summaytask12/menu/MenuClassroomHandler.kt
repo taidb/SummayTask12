@@ -5,9 +5,6 @@ import com.example.summaytask12.system.CoursesManager
 import com.example.summaytask12.system.DataClass
 import com.example.summaytask12.system.InputHandler
 import com.example.summaytask12.system.SchoolManager
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
@@ -15,10 +12,6 @@ class MenuClassroomHandler(
     private val coursesManager: CoursesManager,
     private val schoolManager: SchoolManager,
 ) {
-
-    private val job = Job()
-    private val scope = CoroutineScope(Dispatchers.Default + job)
-
     private fun displayMenu() {
         println("\n=== HỆ THỐNG QUẢN LÝ TRƯỜNG HỌC ===")
         println("1. Quản lý Phòng học")
@@ -37,7 +30,7 @@ class MenuClassroomHandler(
         println("0. Thoát")
     }
 
-    fun handleSelection() {
+    fun handleSelection() = runBlocking {
         var selection: Int
         do {
             displayMenu()
@@ -49,7 +42,7 @@ class MenuClassroomHandler(
                 }
 
                 2 -> {
-                    scope.launch { handleScheduleManagementCouroutine() }
+                    handleScheduleManagementCouroutine()
                 }
 
                 3 -> {
@@ -65,11 +58,11 @@ class MenuClassroomHandler(
                 }
 
                 6 -> {
-                    scope.launch { handleCalculateScheduledRoomsAsync() }
+                    handleCalculateScheduledRoomsAsync()
                 }
 
                 7 -> {
-                    scope.launch { coursesManager.getAll() }
+                    coursesManager.getAll()
                 }
 
                 8 -> {
@@ -78,21 +71,20 @@ class MenuClassroomHandler(
 
                 9 -> {
                     val courseId = InputHandler.getIntInput("Nhập id cần xem số tín")
-                    scope.launch { creditsBySubject(courseId) }
+                    creditsBySubject(courseId)
                 }
 
                 10 -> {
-                    scope.launch { filterSubjects(coursesManager) }
+                    filterSubjects(coursesManager)
                 }
 
                 11 -> {
-                    val id = InputHandler.getIntInput("Id môn học cần cập nhật")
-                    scope.launch { updateCourse(id, coursesManager) }
+                    updateCourse( coursesManager)
                 }
 
                 12 -> {
                     val id = InputHandler.getIntInput("Id môn học cần xóa")
-                    scope.launch { deleteCourse(id, coursesManager) }
+                    deleteCourse(id, coursesManager)
                 }
 
                 0 -> {
@@ -219,9 +211,16 @@ class MenuClassroomHandler(
         universityManager.creditFiltering()
     }
 
-    private suspend fun updateCourse(id: Int, coursesManager: CoursesManager) {
-        val course = InputHandler.getCourseInput()
-        coursesManager.update(id, course)
+    private suspend fun updateCourse(coursesManager: CoursesManager) {
+        val id = InputHandler.getIntInput("Id môn học cần cập nhật")
+        val idCourse =coursesManager.getIdCourse(id)
+        if (idCourse ==id){
+            val course = InputHandler.getCourseInput()
+            coursesManager.update(id, course)
+        }else{
+            println("Không tìm thấy thông tin cần nhập ")
+        }
+
     }
 
     private suspend fun deleteCourse(id: Int, coursesManager: CoursesManager) {

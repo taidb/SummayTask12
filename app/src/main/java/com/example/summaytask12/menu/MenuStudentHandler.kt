@@ -4,15 +4,11 @@ import com.example.summaytask12.enum.AgeRange
 import com.example.summaytask12.system.DataClass.students
 import com.example.summaytask12.system.InputHandler
 import com.example.summaytask12.system.StudentsManager
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 class MenuStudentHandler(
     private val studentsManager: StudentsManager,
 ) {
-    private val scope = CoroutineScope(Dispatchers.Default)
 
     private fun displayMainStudentMenu() {
         println("\n=== HỆ THỐNG QUẢN LÝ SINH VIÊN TRƯỜNG HỌC ===")
@@ -40,7 +36,7 @@ class MenuStudentHandler(
         println("0. Thoát")
     }
 
-    fun handleSelection() {
+    fun handleSelection() = runBlocking {
         var selection: Int
         do {
 
@@ -49,15 +45,15 @@ class MenuStudentHandler(
             selection = InputHandler.getMenuSelection()
             when (selection) {
                 1 -> {
-                    scope.launch { handleAddStudent() }
+                    handleAddStudent()
                 }
 
                 2 -> {
-                    runBlocking { studentsManager.getAll() }
+                    studentsManager.getAll()
                 }
 
                 3 -> {
-                    scope.launch { handleGenerateStudentReport() }
+                    handleGenerateStudentReport(studentsManager)
                 }
 
                 4 -> {
@@ -93,11 +89,11 @@ class MenuStudentHandler(
                 }
 
                 12 -> {
-                    scope.launch { handleUpdateStudent() }
+                    handleUpdateStudent()
                 }
 
                 13 -> {
-                    scope.launch { handleNameSearch() }
+                    handleNameSearch()
                 }
 
                 14 -> {
@@ -109,7 +105,7 @@ class MenuStudentHandler(
                 }
 
                 16 -> {
-                    scope.launch { handleRemoveStudent() }
+                    handleRemoveStudent()
                 }
 
                 17 -> {
@@ -129,7 +125,7 @@ class MenuStudentHandler(
                 }
 
                 21 -> {
-                    studentsManager.filterStudents(students) { it.gpa >= 3.5 }
+                    println(studentsManager.filterStudents(students) { it.gpa >= 3.5 })
                 }
 
                 0 -> {
@@ -148,9 +144,14 @@ class MenuStudentHandler(
         studentsManager.addStudent(student)
     }
 
-    private suspend fun handleGenerateStudentReport() {
+    private suspend fun handleGenerateStudentReport(studentsManager: StudentsManager) {
         val id = InputHandler.getIntInput("Nhập ID cần tìm kiếm:")
-        generateStudentReport(id, studentsManager)
+        val idStudent = studentsManager.getIdStudent(id)
+        if (idStudent == id) {
+            generateStudentReport(id, studentsManager)
+        } else {
+            println("Không tìm thấy id")
+        }
     }
 
     private fun handleCalculateTuition() {
@@ -160,7 +161,12 @@ class MenuStudentHandler(
 
     private suspend fun handleRemoveStudent() {
         val id = InputHandler.getIntInput("Nhập ID cần xóa:")
-        studentsManager.delete(id)
+        val idStudent = studentsManager.getIdStudent(id)
+        if (idStudent == id) {
+            studentsManager.delete(id)
+        } else {
+            println("Không tìm thấy id")
+        }
     }
 
     private fun handleGraduationEligibility() {

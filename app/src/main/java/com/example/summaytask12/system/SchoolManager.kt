@@ -26,7 +26,6 @@ class SchoolManager {
         }
     }
 
-
     // Lấy danh sách phòng học
     fun getClassrooms(): List<Classroom> {
         return DataClass.classrooms

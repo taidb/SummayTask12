@@ -16,6 +16,11 @@ class CoursesManager : BaseInterface<Course> {
         courses.addAll(course)
     }
 
+     fun getIdCourse(id: Int): Int?{
+        val idCourse = courses.find { it.courseId ==id }
+        return idCourse?.courseId
+    }
+
     private fun displayAllCourses() {
         println("Danh sách môn học")
         // For each loop
