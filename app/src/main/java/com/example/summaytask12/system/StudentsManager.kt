@@ -1,25 +1,26 @@
 package com.example.summaytask12.system
 
-import com.example.summaytask12.addItem
+import com.example.summaytask12.generics.addItem
 import com.example.summaytask12.enum.AgeRange
 import com.example.summaytask12.extensions.calculateTuition
 import com.example.summaytask12.extensions.dultStudents
 import com.example.summaytask12.extensions.filterEligibleForGraduation
 import com.example.summaytask12.extensions.getGradeLevel
-import com.example.summaytask12.extensions.getScholarship
 import com.example.summaytask12.extensions.getTotalCredits
 import com.example.summaytask12.extensions.sortByGPADescending
+import com.example.summaytask12.generics.printInfo
+import com.example.summaytask12.interfaces.BaseInterface
 import com.example.summaytask12.model.Student
 import com.example.summaytask12.sealed.StatusStudent
 import com.example.summaytask12.system.SchoolManager.Companion.MIN_GPA_FOR_GRADUATION
 import kotlinx.coroutines.delay
 import kotlin.random.Random
 
-class StudentsManager {
+class StudentsManager : BaseInterface<Student> {
     private val students = mutableListOf<Student>()
 
-    fun registerStudent(student: List<Student>) {
-        addItem(students, student) { a, b -> a.id == b.id }
+    //   fun registerStudent(student: List<Student>) {
+    //     addItem(students, student) { a, b -> a.id == b.id }
 //        for (i in student.indices) {
 //            if (students.any { it.id == student[i].id }) {
 //                println("Sinh viên với ID ${student[i].id} đã tồn tại!")
@@ -28,11 +29,11 @@ class StudentsManager {
 //                println("Đã đăng ký sinh viên: ${student[i].name}")
 //            }
 //        }
-    }
+    //   }
 
-    private fun findStudentById(id: Int): Student? {
-        return students.find { it.id == id }
-    }
+//    private fun findStudentById(id: Int): Student? {
+//        return students.find { it.id == id }
+//    }
 //
 //    fun findCourseById(id: String): Course? {
 //        return courses.find { it.courseId == id }
@@ -40,14 +41,13 @@ class StudentsManager {
     //Kotlin Reflection (::class)
 
 
-    fun findStudentsByName(name: String): List<Student> {
-        // Sử dụng filter với contains (ignore case)
-        return students.filter { it.name.contains(name, ignoreCase = true) }
-    }
+//    fun findStudentsByName(name: String): List<Student> {
+//        // Sử dụng filter với contains (ignore case)
+//        return students.filter { it.name.contains(name, ignoreCase = true) }
+//    }
 
-
-    fun addStudent(student: Student) {
-        val studentId = findStudentById(student.id)
+    suspend fun addStudent(student: Student) {
+        val studentId = getById(student.id)
         if (studentId == null) {
             this.students.add(student)
             println("Đã đăng ký sinh viên: ${student.name}")
@@ -56,35 +56,25 @@ class StudentsManager {
         }
     }
 
-    fun cleanStudent(studentId: Int) {
-        val student = findStudentById(studentId)
-        if (student != null) {
-            students.remove(student)
-            println("Sinh viên ${student.name} đã được xóa khỏi danh sách.")
-        } else {
-            println("Không tìm thấy sinh viên với ID: $studentId")
-        }
-    }
+//    suspend fun cleanStudent(studentId: Int) {
+//        val student = getById(studentId)
+//        if (student != null) {
+//            students.remove(student)
+//            println("Sinh viên ${student.name} đã được xóa khỏi danh sách.")
+//        } else {
+//            println("Không tìm thấy sinh viên với ID: $studentId")
+//        }
+//    }
 
-    fun updateStudent(studentId: Int, newStudent: Student) {
-        val index = students.indexOfFirst { it.id == studentId }
-        if (index != -1) {
-            students[index] = newStudent
-            println("Sinh viên có ID $studentId đã được cập nhật.")
-        } else {
-            println("Không tìm thấy sinh viên với ID: $studentId")
-        }
-    }
-
-    fun displayAllStudents() {
-        println("Danh sách sinh viên:")
-        // For loop với index
-        for ((index, student) in students.withIndex()) {
-            println("${index + 1}. ${student.name} (ID: ${student.id}, GPA: ${student.gpa})")
-
-        }
-        println("Tổng số sinh viên: ${students.size} sinh viên")
-    }
+//    fun updateStudent(studentId: Int, newStudent: Student) {
+//        val index = students.indexOfFirst { it.id == studentId }
+//        if (index != -1) {
+//            students[index] = newStudent
+//            println("Sinh viên có ID $studentId đã được cập nhật.")
+//        } else {
+//            println("Không tìm thấy sinh viên với ID: $studentId")
+//        }
+//    }
 
     fun getTopPerformingStudents(limit: Int = 5) {
         println("In danh sách sinh viên xếp loại giỏi và xuất sắc")
@@ -118,8 +108,8 @@ class StudentsManager {
 
     // 4.HÀM VÀ SCOPE FUNCTION
     // let: Dùng để biến đổi giá trị hoặc xử lý an toàn với null
-    fun generateStudentReport(studentId: Int): String {
-        val student = findStudentById(studentId)
+    suspend fun generateStudentReport(studentId: Int): String {
+        val student = getById(studentId)
         return student?.let {
             """
             |Tên: ${it.name}
@@ -211,12 +201,75 @@ class StudentsManager {
     fun scholarshipStudents(students: List<Student>) {
         for (student in students) {
             if (student.gpa >= 3.5) {
-                student.getScholarship(StatusStudent.Scholarship("Sinh viên ${student.name} được học bổng"))
-            } else if (student.gpa < 1.0){
-                student.getScholarship(StatusStudent.Scholarship("Sinh viên ${student.name} không được học bổng"))
-            }else{
-                student.getScholarship(StatusStudent.Normal("Sinh viên ${student.name} không được học bổng"))
+                getScholarship(StatusStudent.Scholarship("Sinh viên ${student.name} được học bổng"))
+            } else if (student.gpa < 1.0) {
+                getScholarship(StatusStudent.Scholarship("Sinh viên ${student.name} không được học bổng"))
+            } else {
+                getScholarship(StatusStudent.Normal("Sinh viên ${student.name} không được học bổng"))
             }
         }
+    }
+
+    private fun getScholarship(status: StatusStudent){
+        when(status){
+            is StatusStudent.Scholarship -> println(status.message)
+            is StatusStudent.Warning -> println(status.message)
+            is StatusStudent.Normal -> println(status.message)
+
+        }
+    }
+
+    //Higher-order function
+    fun filterStudents(
+        students: List<Student>,
+        condition: (Student) -> Boolean
+    ): List<Student> {
+        return students.filter(condition)
+    }
+
+    override suspend fun getAll() {
+        println("Danh sách sinh viên:")
+        // For loop với index
+//        for ((index, student) in students.withIndex()) {
+//            println("${index + 1}. ${student.name} (ID: ${student.id}, GPA: ${student.gpa})")
+//
+//        }
+//        println("Tổng số sinh viên: ${students.size} sinh viên")
+        printInfo(students) { student ->
+            "${student.name} (ID: ${student.id}, GPA: ${student.gpa})"
+        }
+    }
+
+    override suspend fun getById(id: Int): Student? {
+        return students.find { it.id == id }
+    }
+
+    override suspend fun getByName(name: String): List<Student> {
+        return students.filter { it.name.contains(name, ignoreCase = true) }
+    }
+
+    override suspend fun delete(id: Int) {
+        val student = getById(id)
+        if (student != null) {
+            students.remove(student)
+            println("Sinh viên ${student.name} đã được xóa khỏi danh sách.")
+        } else {
+            println("Không tìm thấy sinh viên với ID: $id")
+        }
+    }
+
+    override suspend fun update(id: Int, item: Student) {
+        val index = students.indexOfFirst { it.id == id }
+        if (index != -1) {
+            students[index] = item
+            println("Sinh viên có ID $id đã được cập nhật.")
+        } else {
+            println("Không tìm thấy sinh viên với ID: $id")
+        }
+
+    }
+
+    override suspend fun insert(item: List<Student>) {
+        addItem(students, item) { a, b -> a.id == b.id }
     }
 }

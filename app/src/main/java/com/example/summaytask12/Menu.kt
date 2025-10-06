@@ -9,6 +9,9 @@ import com.example.summaytask12.system.InputHandler
 import com.example.summaytask12.system.SchoolManager
 import com.example.summaytask12.system.StudentsManager
 import com.example.summaytask12.system.TeachersManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 fun main() {
     val coursesManager = CoursesManager()
@@ -20,10 +23,11 @@ fun main() {
     val menuTeacherHandler = MenuTeacherHandler(teachersManager)
     val menuClassroomsHandler =
         MenuClassroomHandler(coursesManager, schoolManager)
+    val scope = CoroutineScope(Dispatchers.Default)
     // Khởi tạo dữ liệu
-    createCourses(coursesManager)
-    hireTeacher(teachersManager)
-    registerStudent(studentsManager)
+    scope.launch { createCourses(coursesManager) }
+    scope.launch { hireTeacher(teachersManager) }
+    scope.launch { registerStudent(studentsManager) }
     addClassrooms(schoolManager)
     createSchedules(schoolManager)
     createData()
@@ -47,7 +51,6 @@ fun main() {
     } while (selection != 0)
 }
 
-
 fun createData() {
     // Sinh viên đăng ký môn học
     DataClass.students[0].enrollStudent(DataClass.courses[0])
@@ -65,26 +68,48 @@ fun createData() {
     DataClass.teachers[1].grade(DataClass.students[0], DataClass.courses[1], 7.8)
     DataClass.teachers[2].grade(DataClass.students[1], DataClass.courses[2], 6.5)
     DataClass.teachers[1].grade(DataClass.students[1], DataClass.courses[3], 5.5)
+
+    DataClass.teachers[0].provideFeedback(
+        DataClass.students[0],
+        DataClass.courses[0],
+        "Sinh viên tiếp thu bài tốt"
+    )
+    DataClass.teachers[0].provideFeedback(
+        DataClass.students[0],
+        DataClass.courses[1],
+        "Sinh viên tiếp thu bài tốt"
+    )
+    DataClass.teachers[0].provideFeedback(
+        DataClass.students[1],
+        DataClass.courses[2],
+        "Sinh viên tiếp thu bài tốt"
+    )
+    DataClass.teachers[0].provideFeedback(
+        DataClass.students[1],
+        DataClass.courses[3],
+        "Sinh viên tiếp thu bài tốt"
+    )
+
 }
 
-fun createCourses(coursesManager: CoursesManager) {
+suspend fun createCourses(coursesManager: CoursesManager) {
     // Tạo môn học
-    coursesManager.addCourses(DataClass.courses)
+    coursesManager.insert(DataClass.courses)
 }
 
-fun hireTeacher(teachersManager: TeachersManager) {
-    teachersManager.hireTeacher(DataClass.teachers)
+suspend fun hireTeacher(teachersManager: TeachersManager) {
+    teachersManager.insert(DataClass.teachers)
 }
 
-fun registerStudent(studentsManager: StudentsManager) {
-    studentsManager.registerStudent(DataClass.students)
+suspend fun registerStudent(studentsManager: StudentsManager) {
+    studentsManager.insert(DataClass.students)
 }
 
 fun addClassrooms(classroomsManager: SchoolManager) {
     DataClass.classrooms.forEach { classroomsManager.addClassroom(it) }
 }
 
-fun createSchedules(schedulesManager: SchoolManager ) {
+fun createSchedules(schedulesManager: SchoolManager) {
     // Tạo lịch học mẫu
     schedulesManager.addSchedules(DataClass.sampleSchedule)
 }

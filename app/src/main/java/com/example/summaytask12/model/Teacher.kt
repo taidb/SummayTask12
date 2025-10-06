@@ -13,11 +13,18 @@ class Teacher(
     override fun toString(): String {
         return "Teacher(id=$id, name=$name, age=$age, subject =$subject , salary=$salary)"
     }
+
     private val taughtCourses = mutableListOf<Course>()
+
     override fun getRole() = "Teacher"
 
     override fun grade(student: Student, course: Course, grade: Double) {
         println("GV $name chấm cho SV ${student.name} môn ${course.courseName}: $grade điểm")
+    }
+
+    override fun provideFeedback(student: Student, course: Course, feedback: String) {
+        super.provideFeedback(student, course, feedback)
+        println("(Đánh giá chi tiết từ giáo viên)")
     }
 
     override fun showInfo() {
@@ -32,8 +39,6 @@ class Teacher(
         taughtCourses.add(course)
         println("Giáo viên $name được phân công dạy môn ${course.courseName}")
     }
-
-
 
 }
 

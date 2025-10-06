@@ -1,11 +1,16 @@
 package com.example.summaytask12.system
 
 import com.example.summaytask12.enum.StatusSchedule
-import com.example.summaytask12.extensions.dultStudents
-import com.example.summaytask12.genericsPrint
+import com.example.summaytask12.generics.genericsPrint
 import com.example.summaytask12.model.Classroom
 import com.example.summaytask12.model.Schedule
-import com.example.summaytask12.model.Student
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class SchoolManager {
 
@@ -24,7 +29,6 @@ class SchoolManager {
 
     // Lấy danh sách phòng học
     fun getClassrooms(): List<Classroom> {
-
         return DataClass.classrooms
     }
 
@@ -32,7 +36,7 @@ class SchoolManager {
         schedules.addAll(schedule)
     }
 
-    fun createSchedule(scheduleRequest: Schedule) {
+    private fun createSchedule(scheduleRequest: Schedule) {
         val existingClassroom =
             classrooms.find { it.roomId == scheduleRequest.classroom.roomId  }
         if (existingClassroom == null) {
@@ -93,30 +97,39 @@ class SchoolManager {
     }
 
     // Lấy danh sách lịch học
-    fun getSchedules(): List<Schedule> {
-        return schedules
-    }
+//    fun getSchedules(): List<Schedule> {
+//        return schedules
+//    }
 
 
     // Higher-order function
     fun getClassroomsIsEmpty(condition: (Classroom) -> Boolean, action: (Classroom) -> Unit) {
         return classrooms.filter(condition).forEach(action)
     }
+
+    //giả lập để sử dụng couroutine :
+    suspend fun fetchSchedulesAsync():List<Schedule> = withContext(Dispatchers.IO){
+        delay(1000) // ví dụ đang sự dụng để call api
+        println("Đã tải ${schedules.size} lịch học từ CSDL")
+        schedules
+    }
+
+    fun createScheduleAsync(scope: CoroutineScope,schedule: Schedule){
+        scope.launch(Dispatchers.IO) {
+            delay(500) // ví dụ đây đang đọc file hoặc truy cập DB
+            createSchedule(schedule)
+        }
+    }
+
+    suspend fun calculateScheduledRoomsAsync(): Int = coroutineScope {
+        val scheduledCount = async(Dispatchers.Default) {
+            schedules.count { it.classroom.status == StatusSchedule.SCHEDULED }
+        }
+        scheduledCount.await()
+    }
+
 //    fun getClassroomsIsEmpty() {
 //        println(classrooms.filter {(it.status == StatusSchedule.DRUM || it.status == StatusSchedule.CANCELED) })
-//    }
-
-
-
-
-
-    // apply: Dùng để cấu hình đối tượng (thường dùng khi khởi tạo)
-//    fun updateTeacher(teacher: Teacher) {
-//        var user = teacher.apply {
-//            salary = 20000000.0
-//            subject = "Tin Học Đại Cương"
-//        }
-//        println("Giáo viên sau khi apply: $user")
 //    }
 
     // Hàm một dòng
@@ -131,17 +144,6 @@ class SchoolManager {
 //        return teacher != null
 //    }
 
-    //If -else
-    fun duplicateTest(students: List<Student>) {
-//        for (i in 0 until students.size) {
-//            for (j in i + 1 until students.size) {
-//                if (students[i].id==students[j].id) {
-//                    println("Sinh viên ${students[i].name} trùng id với sinh viên ${students[j].name}")
-//                }
-//            }
-//        }
-        students.dultStudents()
-    }
 
     //When
 //    fun studentClassification(students: List<Student>) {

@@ -1,6 +1,8 @@
 package com.example.summaytask12.system
 
+import com.example.summaytask12.model.Course
 import com.example.summaytask12.model.Student
+import com.example.summaytask12.model.Teacher
 
 
 object InputHandler {
@@ -36,4 +38,29 @@ object InputHandler {
         val address = getStringInput("")
         return Student(id, name, age, gpa, address)
     }
+
+    fun getTeacherInput(): Teacher {
+        println("Nhập ID:")
+        val id = getIntInput("")
+        println("Nhập tên:")
+        val name = getStringInput("")
+        println("Nhập tuổi:")
+        val age = getIntInput("")
+        println("Nhập môn học giảng dạy:")
+        val subject = getStringInput("")
+        println("Nhập lương giáo viên:")
+        val salary = getDoubleInput("")
+        return Teacher(id, name, age, subject, salary)
+    }
+
+    fun getCourseInput(): Course {
+        println("Nhập ID:")
+        val id = getIntInput("")
+        println("Nhập tên môn học:")
+        val name = getStringInput("")
+        println("Nhập số tín:")
+        val credit = getIntInput("")
+        return Course(id, name, credit)
+    }
+
 }

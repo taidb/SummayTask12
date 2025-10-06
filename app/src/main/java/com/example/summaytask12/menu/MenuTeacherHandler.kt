@@ -3,10 +3,14 @@ package com.example.summaytask12.menu
 import com.example.summaytask12.system.DataClass.teachers
 import com.example.summaytask12.system.InputHandler
 import com.example.summaytask12.system.TeachersManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MenuTeacherHandler(
     private val teachersManager: TeachersManager,
 ) {
+    private val scope = CoroutineScope(Dispatchers.Default)
     private fun displayMainTeacherMenu() {
         println("\n=== HỆ THỐNG QUẢN LÝ GIÁO VIÊN TRƯỜNG HỌC ===")
         println("1. In danh sách giáo viên")
@@ -14,21 +18,23 @@ class MenuTeacherHandler(
         println("3. Lương giáo viên theo Id")
         println("4. Môn học giáo viên dạy")
         println("5. Kiểm tra đại học")
-        println("6.Tìm kiếm giáo viên theo Id")
+        println("6.Tìm kiếm giáo viên theo tên")
+        println("7.Cập nhật thông tin thường gặp giáo viên")
+        println("8. Cập nhật thông tin")
+        println("9.Xóa giáo viên")
         println("0. Thoát")
 
     }
 
     fun handleSelection() {
-        var selection :Int
+        var selection: Int
         do {
-
             displayMainTeacherMenu()
             print("Nhập lựa chọn: ")
             selection = InputHandler.getMenuSelection()
             when (selection) {
                 1 -> {
-                    teachersManager.displayAllTeachers()
+                    scope.launch { teachersManager.getAll() }
                 }
 
                 2 -> {
@@ -47,6 +53,30 @@ class MenuTeacherHandler(
                     teachersManager.performUniversityAudit()
                 }
 
+                6 -> {
+                    scope.launch { teachersManager.getByName(InputHandler.getStringInput("Nhập tên giáo viên:")) }
+                }
+
+                7 -> {
+                    scope.launch {
+                        teachersManager.updateTeacher(
+                            InputHandler.getIntInput("Nhập id giáo viên:"),
+                            InputHandler.getDoubleInput("Nhập lương cần cập nhật"),
+                            InputHandler.getStringInput("Nhập môn học:"),
+                        )
+                    }
+                }
+
+                8 -> {
+                    val id = InputHandler.getIntInput("Nhập id giáo viên cần cập nhật")
+                    scope.launch { updateTeacher(id, teachersManager) }
+                }
+
+                9 -> {
+                    val id = InputHandler.getIntInput("Nhập id giáo viên cần xóa")
+                    scope.launch { deleteTeacher(id, teachersManager) }
+                }
+
                 0 -> {
                     println("Thoát chương trình...")
                 }
@@ -55,12 +85,22 @@ class MenuTeacherHandler(
                     println("Lựa chọn không hợp lệ")
                 }
             }
-        }while (selection!=0)
+        } while (selection != 0)
     }
 
     private fun handleTeacherSalary() {
         val id = InputHandler.getIntInput("Nhập ID giáo viên:")
         println(teachersManager.getTeacherSalary(id))
+    }
+
+    private suspend fun updateTeacher(id: Int, teachersManager: TeachersManager) {
+        println("Nhập thông tin giáo viên cần update:")
+        val teacher = InputHandler.getTeacherInput()
+        teachersManager.update(id, teacher)
+    }
+
+    private suspend fun deleteTeacher(id: Int, teachersManager: TeachersManager) {
+        teachersManager.delete(id)
     }
 
 }

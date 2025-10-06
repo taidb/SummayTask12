@@ -5,11 +5,19 @@ import com.example.summaytask12.system.CoursesManager
 import com.example.summaytask12.system.DataClass
 import com.example.summaytask12.system.InputHandler
 import com.example.summaytask12.system.SchoolManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class MenuClassroomHandler(
     private val coursesManager: CoursesManager,
     private val schoolManager: SchoolManager,
 ) {
+
+    private val job = Job()
+    private val scope = CoroutineScope(Dispatchers.Default + job)
 
     private fun displayMenu() {
         println("\n=== HỆ THỐNG QUẢN LÝ TRƯỜNG HỌC ===")
@@ -18,8 +26,14 @@ class MenuClassroomHandler(
         println("3. Hủy đăng kí phòng học")
         println("4. Đăng kí phòng học")
         println("5. Kiểm tra lớp còn trống")
-        println("6. In danh sách môn học")
-        println("7. Thống kê môn học")
+        println("6. Số phòng đang sử dụng")
+        println("7. In danh sách môn học")
+        println("8. Thống kê môn học")
+        println("9. Số tín chỉ trên mỗi môn học")
+        println("10. In môn học có tín chỉ lớn hơn 3")
+        println("11. Cập nhật thông tin môn học")
+        println("12. Xóa môn hoc theo Id")
+
         println("0. Thoát")
     }
 
@@ -35,7 +49,7 @@ class MenuClassroomHandler(
                 }
 
                 2 -> {
-                    handleScheduleManagement()
+                    scope.launch { handleScheduleManagementCouroutine() }
                 }
 
                 3 -> {
@@ -43,7 +57,7 @@ class MenuClassroomHandler(
                 }
 
                 4 -> {
-                    handleCreateSchedule()
+                    handleCreateScheduleAsync()
                 }
 
                 5 -> {
@@ -51,11 +65,34 @@ class MenuClassroomHandler(
                 }
 
                 6 -> {
-                    coursesManager.displayAllCourses()
+                    scope.launch { handleCalculateScheduledRoomsAsync() }
                 }
 
                 7 -> {
+                    scope.launch { coursesManager.getAll() }
+                }
+
+                8 -> {
                     handleCourseStatistics()
+                }
+
+                9 -> {
+                    val courseId = InputHandler.getIntInput("Nhập id cần xem số tín")
+                    scope.launch { creditsBySubject(courseId) }
+                }
+
+                10 -> {
+                    scope.launch { filterSubjects(coursesManager) }
+                }
+
+                11 -> {
+                    val id = InputHandler.getIntInput("Id môn học cần cập nhật")
+                    scope.launch { updateCourse(id, coursesManager) }
+                }
+
+                12 -> {
+                    val id = InputHandler.getIntInput("Id môn học cần xóa")
+                    scope.launch { deleteCourse(id, coursesManager) }
                 }
 
                 0 -> {
@@ -103,14 +140,29 @@ class MenuClassroomHandler(
         println("Tổng số phòng: ${getClassrooms.size}")
     }
 
-    private fun handleScheduleManagement() {
-        printListSchedules(schoolManager)
-    }
+    // không sự dụng couroutine
+//    private fun handleScheduleManagement() {
+//        printListSchedules(schoolManager)
+//    }
+//
+//    private fun printListSchedules(universityManager: SchoolManager) {
+//        if (universityManager.getSchedules().isNotEmpty()) {
+//            println("Danh sách lịch học:")
+//            universityManager.getSchedules().forEachIndexed { index, schedule ->
+//                println("${index + 1}. ")
+//                schedule.displaySchedule()
+//            }
+//        } else {
+//            println("Chưa có lịch học nào được tạo")
+//        }
+//    }
 
-    private fun printListSchedules(universityManager: SchoolManager) {
-        if (universityManager.getSchedules().isNotEmpty()) {
+    // Sự dụng couroutine
+    private suspend fun handleScheduleManagementCouroutine() {
+        val schedules = schoolManager.fetchSchedulesAsync()
+        if (schedules.isNotEmpty()) {
             println("Danh sách lịch học:")
-            universityManager.getSchedules().forEachIndexed { index, schedule ->
+            schedules.forEachIndexed { index, schedule ->
                 println("${index + 1}. ")
                 schedule.displaySchedule()
             }
@@ -119,14 +171,27 @@ class MenuClassroomHandler(
         }
     }
 
+    private suspend fun handleCalculateScheduledRoomsAsync() {
+        val count = schoolManager.calculateScheduledRoomsAsync()
+        println("🏫 Số phòng đang sử dụng: $count")
+    }
+
     private fun handleCancelSchedule() {
         val id = InputHandler.getIntInput("Nhập ID lịch học cần hủy:")
         schoolManager.cancelSchedule(id)
     }
 
-    private fun handleCreateSchedule() {
-        schoolManager.createSchedule(DataClass.sampleSchedule2)
-        println("Đã tạo lịch học mẫu")
+//    private fun handleCreateSchedule() {
+//        schoolManager.createSchedule(DataClass.sampleSchedule2)
+//        println("Đã tạo lịch học mẫu")
+//    }
+
+    private fun handleCreateScheduleAsync() = runBlocking {
+        println("Tạo lịch học mẫu")
+        launch {
+            schoolManager.createScheduleAsync(this, DataClass.sampleSchedule2)
+        }.join()
+        println("Lịch học đã được tạo")
     }
 
     private fun handleCheckEmptyClassrooms() {
@@ -142,6 +207,26 @@ class MenuClassroomHandler(
             condition = { cl -> cl.status == StatusSchedule.CANCELED },
             action = { cl -> println("Phòng ĐÃ HỦY LỊCH: ${cl.roomNumber}, Sức chứa: ${cl.capacity}, Tiện nghi: ${cl.facilities.joinToString()}, Trạng thái: ${cl.status}") }
         )
+    }
+
+    private suspend fun creditsBySubject(courseId: Int) {
+        coursesManager.creditsBySubject(courseId) { course ->
+            println("➡️ Môn học: ${course.courseName} có ${course.credit} tín chỉ.")
+        }
+    }
+
+    private suspend fun filterSubjects(universityManager: CoursesManager) {
+        universityManager.creditFiltering()
+    }
+
+    private suspend fun updateCourse(id: Int, coursesManager: CoursesManager) {
+        val course = InputHandler.getCourseInput()
+        coursesManager.update(id, course)
+    }
+
+    private suspend fun deleteCourse(id: Int, coursesManager: CoursesManager) {
+        coursesManager.delete(id)
+
     }
 }
 

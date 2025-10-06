@@ -4,11 +4,15 @@ import com.example.summaytask12.enum.AgeRange
 import com.example.summaytask12.system.DataClass.students
 import com.example.summaytask12.system.InputHandler
 import com.example.summaytask12.system.StudentsManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 class MenuStudentHandler(
     private val studentsManager: StudentsManager,
 ) {
+    private val scope = CoroutineScope(Dispatchers.Default)
 
     private fun displayMainStudentMenu() {
         println("\n=== HỆ THỐNG QUẢN LÝ SINH VIÊN TRƯỜNG HỌC ===")
@@ -32,6 +36,7 @@ class MenuStudentHandler(
         println("18.5 Sinh viên đạt học bổng")
         println("19.Tổng số tỉn chỉ sinh viên")
         println("20.Kiểm tra tình trạng sinh viên : Học bổng ,Cảnh cáo")
+        println("21. Kiểm tra snh viên có điểm lớn hơn 3.5")
         println("0. Thoát")
     }
 
@@ -44,15 +49,15 @@ class MenuStudentHandler(
             selection = InputHandler.getMenuSelection()
             when (selection) {
                 1 -> {
-                    handleAddStudent()
+                    scope.launch { handleAddStudent() }
                 }
 
-                2 ->{
-                    studentsManager.displayAllStudents()
+                2 -> {
+                    runBlocking { studentsManager.getAll() }
                 }
 
                 3 -> {
-                    handleGenerateStudentReport()
+                    scope.launch { handleGenerateStudentReport() }
                 }
 
                 4 -> {
@@ -88,11 +93,11 @@ class MenuStudentHandler(
                 }
 
                 12 -> {
-                    handleUpdateStudent()
+                    scope.launch { handleUpdateStudent() }
                 }
 
                 13 -> {
-                    handleNameSearch()
+                    scope.launch { handleNameSearch() }
                 }
 
                 14 -> {
@@ -104,7 +109,7 @@ class MenuStudentHandler(
                 }
 
                 16 -> {
-                    handleRemoveStudent()
+                    scope.launch { handleRemoveStudent() }
                 }
 
                 17 -> {
@@ -119,8 +124,12 @@ class MenuStudentHandler(
                     studentsManager.getTotalCreditsStudent(students)
                 }
 
-                20 ->{
+                20 -> {
                     studentsManager.scholarshipStudents(students)
+                }
+
+                21 -> {
+                    studentsManager.filterStudents(students) { it.gpa >= 3.5 }
                 }
 
                 0 -> {
@@ -134,12 +143,12 @@ class MenuStudentHandler(
         } while (selection != 0)
     }
 
-    private fun handleAddStudent() {
+    private suspend fun handleAddStudent() {
         val student = InputHandler.getStudentInput()
         studentsManager.addStudent(student)
     }
 
-    private fun handleGenerateStudentReport() {
+    private suspend fun handleGenerateStudentReport() {
         val id = InputHandler.getIntInput("Nhập ID cần tìm kiếm:")
         generateStudentReport(id, studentsManager)
     }
@@ -149,9 +158,9 @@ class MenuStudentHandler(
         studentsManager.calculateTuitionStudent(students, creditPrice)
     }
 
-    private fun handleRemoveStudent() {
+    private suspend fun handleRemoveStudent() {
         val id = InputHandler.getIntInput("Nhập ID cần xóa:")
-        studentsManager.cleanStudent(id)
+        studentsManager.delete(id)
     }
 
     private fun handleGraduationEligibility() {
@@ -178,20 +187,20 @@ class MenuStudentHandler(
         studentsManager.addressCheck(students, address)
     }
 
-    private fun handleUpdateStudent() {
+    private suspend fun handleUpdateStudent() {
         val id = InputHandler.getIntInput("Nhập ID cần cập nhật:")
         println("Nhập thông tin mới:")
         val student = InputHandler.getStudentInput()
-        studentsManager.updateStudent(id, student)
+        studentsManager.update(id, student)
     }
 
-    private fun handleNameSearch() {
+    private suspend fun handleNameSearch() {
         val name = InputHandler.getStringInput("Nhập tên cần tìm kiếm:")
-        println(studentsManager.findStudentsByName(name))
+        println(studentsManager.getByName(name))
     }
 
     // Các hàm utility giữ nguyên
-    private fun generateStudentReport(studentId: Int, studentsManager: StudentsManager) {
+    private suspend fun generateStudentReport(studentId: Int, studentsManager: StudentsManager) {
         println("Thông tin cần tìm: ${studentsManager.generateStudentReport(studentId)}")
     }
 

@@ -9,11 +9,11 @@ import com.example.summaytask12.model.Teacher
 
 object DataClass {
     val courses = listOf(
-        Course("CS101", "Lập trình Kotlin", 3),
-        Course("CS102", "Cấu trúc dữ liệu", 4),
-        Course("CS103", "Cơ sở dữ liệu", 3),
-        Course("CS104", "Mạng máy tính", 3),
-        Course("CS105", "Trí tuệ nhân tạo", 4)
+        Course(101, "Lập trình Kotlin", 3),
+        Course(102, "Cấu trúc dữ liệu", 4),
+        Course(103, "Cơ sở dữ liệu", 3),
+        Course(104, "Mạng máy tính", 3),
+        Course(105, "Trí tuệ nhân tạo", 4)
     )
 
     //Tạo giáo viên

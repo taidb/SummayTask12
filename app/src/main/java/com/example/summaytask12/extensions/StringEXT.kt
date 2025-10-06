@@ -1,6 +1,5 @@
 package com.example.summaytask12.extensions
 
-import com.example.summaytask12.sealed.StatusStudent
 
 fun String.capitalizeFirst(): String {
     val nameParts = this.split(" ")
@@ -10,10 +9,10 @@ fun String.capitalizeFirst(): String {
     return if (isConrectFormat) {
         this
     } else {
-        nameParts.map { part ->
+        nameParts.joinToString(" ") { part ->
             part.lowercase()
                 .replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
-        }.joinToString(" ")
+        }
     }
 }
 

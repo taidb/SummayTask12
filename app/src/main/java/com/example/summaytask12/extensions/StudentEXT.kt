@@ -2,7 +2,6 @@
 
     import com.example.summaytask12.enum.GradeLevel
     import com.example.summaytask12.model.Student
-    import com.example.summaytask12.sealed.StatusStudent
 
 
     // Extension Function cho Student
@@ -26,13 +25,5 @@
             this.gpa >= GradeLevel.AVERAGE.minScore -> GradeLevel.AVERAGE
             this.gpa >= GradeLevel.BELOW_AVERAGE.minScore -> GradeLevel.BELOW_AVERAGE
             else -> GradeLevel.FAIL
-        }
-    }
-    fun Student.getScholarship(status: StatusStudent){
-        when(status){
-            is StatusStudent.Scholarship -> println(status.message)
-            is StatusStudent.Warning -> println(status.message)
-            is StatusStudent.Normal -> println(status.message)
-
         }
     }
