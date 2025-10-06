@@ -111,7 +111,7 @@ class StudentsManager : BaseInterface<Student> {
         )
     }
 
-    // 4.HÀM VÀ SCOPE FUNCTION
+
     // let: Dùng để biến đổi giá trị hoặc xử lý an toàn với null
     suspend fun generateStudentReport(studentId: Int): String {
         val student = getById(studentId)

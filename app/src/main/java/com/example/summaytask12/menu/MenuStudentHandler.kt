@@ -3,44 +3,18 @@ package com.example.summaytask12.menu
 import com.example.summaytask12.enum.AgeRange
 import com.example.summaytask12.system.DataClass.students
 import com.example.summaytask12.system.InputHandler
+import com.example.summaytask12.system.OutputHandler
 import com.example.summaytask12.system.StudentsManager
-import kotlinx.coroutines.runBlocking
 
 class MenuStudentHandler(
     private val studentsManager: StudentsManager,
+    private val outputHandler: OutputHandler
 ) {
-
-    private fun displayMainStudentMenu() {
-        println("\n=== HỆ THỐNG QUẢN LÝ SINH VIÊN TRƯỜNG HỌC ===")
-        println("1. Thêm sinh viên")
-        println("2. In danh sách sinh viên")
-        println("3. Tạo báo cáo sinh viên cần tìm kiếm")
-        println("4. Tổng học phí sinh viên")
-        println("5. Thống kê sinh viên theo độ tuổi")
-        println("6. Điểm GPA trung bình của sinh viên")
-        println("7. Thêm sinh viên mẫu")
-        println("8. Kiểm tra trùng ID")
-        println("9. Danh sách xếp loại")
-        println("10. Sinh viên đăng kí môn học")
-        println("11. Tìm kiếm sinh viên theo địa chỉ")
-        println("12. Cập nhật sinh viên")
-        println("13. Tìm kiếm sinh viên theo tên")
-        println("14. Điểm trung bình tất cả sinh viên")
-        println("15.Sinh viên đỗ tốt nghiệp")
-        println("16.Xóa sinh viên theo Id")
-        println("17.Danh sách trạng thái sinh viên")
-        println("18.5 Sinh viên đạt học bổng")
-        println("19.Tổng số tỉn chỉ sinh viên")
-        println("20.Kiểm tra tình trạng sinh viên : Học bổng ,Cảnh cáo")
-        println("21. Kiểm tra snh viên có điểm lớn hơn 3.5")
-        println("0. Thoát")
-    }
-
-    fun handleSelection() = runBlocking {
+   suspend fun handleSelection() {
         var selection: Int
         do {
 
-            displayMainStudentMenu()
+            outputHandler.displayMainStudentMenu()
             print("Nhập lựa chọn: ")
             selection = InputHandler.getMenuSelection()
             when (selection) {
@@ -169,11 +143,10 @@ class MenuStudentHandler(
         }
     }
 
-    private fun handleGraduationEligibility() {
-        runBlocking {
-            val result = studentsManager.processGraduationAsync(students).toString()
-            println(result)
-        }
+    private suspend fun handleGraduationEligibility() {
+        val result = studentsManager.processGraduationAsync(students).toString()
+        println(result)
+
     }
 
     private fun handleAgeRangeStatistics() {

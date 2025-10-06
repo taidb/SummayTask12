@@ -1,6 +1,5 @@
 package com.example.summaytask12.extensions
 
-
 fun String.capitalizeFirst(): String {
     val nameParts = this.split(" ")
     val isConrectFormat = nameParts.all { part ->
@@ -15,6 +14,16 @@ fun String.capitalizeFirst(): String {
         }
     }
 }
+
+fun String.isValidString(): Boolean {
+    return this.matches(Regex("^[a-zA-ZÀ-ỹ\\s]+$"))
+
+}
+
+fun String.isValidInt(): Boolean {
+    return this.matches(Regex("^\\d+$"))
+}
+
 
 //fun String.reverseString(): String {
 //    return this.reversed()

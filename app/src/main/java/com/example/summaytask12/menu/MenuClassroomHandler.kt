@@ -4,36 +4,21 @@ import com.example.summaytask12.enum.StatusSchedule
 import com.example.summaytask12.system.CoursesManager
 import com.example.summaytask12.system.DataClass
 import com.example.summaytask12.system.InputHandler
+import com.example.summaytask12.system.OutputHandler
 import com.example.summaytask12.system.SchoolManager
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 class MenuClassroomHandler(
     private val coursesManager: CoursesManager,
     private val schoolManager: SchoolManager,
+    private val outputHandler: OutputHandler
 ) {
-    private fun displayMenu() {
-        println("\n=== HỆ THỐNG QUẢN LÝ TRƯỜNG HỌC ===")
-        println("1. Quản lý Phòng học")
-        println("2. Quản lý Lịch học")
-        println("3. Hủy đăng kí phòng học")
-        println("4. Đăng kí phòng học")
-        println("5. Kiểm tra lớp còn trống")
-        println("6. Số phòng đang sử dụng")
-        println("7. In danh sách môn học")
-        println("8. Thống kê môn học")
-        println("9. Số tín chỉ trên mỗi môn học")
-        println("10. In môn học có tín chỉ lớn hơn 3")
-        println("11. Cập nhật thông tin môn học")
-        println("12. Xóa môn hoc theo Id")
 
-        println("0. Thoát")
-    }
-
-    fun handleSelection() = runBlocking {
+    suspend fun handleSelection() {
         var selection: Int
         do {
-            displayMenu()
+            outputHandler.displayMenuSchool()
             print("Nhập lựa chọn: ")
             selection = InputHandler.getMenuSelection()
             when (selection) {
@@ -79,12 +64,44 @@ class MenuClassroomHandler(
                 }
 
                 11 -> {
-                    updateCourse( coursesManager)
+                    updateCourse(coursesManager)
                 }
 
                 12 -> {
                     val id = InputHandler.getIntInput("Id môn học cần xóa")
                     deleteCourse(id, coursesManager)
+                }
+
+                13 -> {
+                    handleGetAllClassrooms()
+                }
+
+                14 -> {
+                    handleGetClassroomById()
+                }
+
+                15 -> {
+                    handleGetClassroomByName()
+                }
+
+                16 -> {
+                    handleDeleteClassroom()
+                }
+
+                17 -> {
+                    handleGetAllSchedules()
+                }
+
+                18 -> {
+                    handleGetScheduleById()
+                }
+
+                19 -> {
+                    handleGetScheduleByName()
+                }
+
+                20 -> {
+                    handleDeleteSchedule()
                 }
 
                 0 -> {
@@ -101,7 +118,6 @@ class MenuClassroomHandler(
     private fun handleCourseStatistics() {
         getCourseStatistics(coursesManager)
     }
-
 
     private fun getCourseStatistics(coursesManager: CoursesManager) {
         println("In ra thống kê môn học: ${coursesManager.getCourseStatistics().entries}")
@@ -120,34 +136,14 @@ class MenuClassroomHandler(
         printListClassroom(schoolManager)
     }
 
-
     private fun printListClassroom(schoolManager: SchoolManager) {
         println("Quản lí phòng học")
         println("Danh sách phòng học:")
         val getClassrooms = schoolManager.getClassrooms()
         getClassrooms.forEachIndexed { _, room ->
             println(room.displayInfo())
-//        println("${index + 1}. Phòng ${room.roomNumber} (Sức chứa: ${room.capacity}) - Tiện nghi: ${room.facilities.joinToString()} - Trạng thái: ${room.status}")
         }
-        println("Tổng số phòng: ${getClassrooms.size}")
     }
-
-    // không sự dụng couroutine
-//    private fun handleScheduleManagement() {
-//        printListSchedules(schoolManager)
-//    }
-//
-//    private fun printListSchedules(universityManager: SchoolManager) {
-//        if (universityManager.getSchedules().isNotEmpty()) {
-//            println("Danh sách lịch học:")
-//            universityManager.getSchedules().forEachIndexed { index, schedule ->
-//                println("${index + 1}. ")
-//                schedule.displaySchedule()
-//            }
-//        } else {
-//            println("Chưa có lịch học nào được tạo")
-//        }
-//    }
 
     // Sự dụng couroutine
     private suspend fun handleScheduleManagementCouroutine() {
@@ -165,7 +161,7 @@ class MenuClassroomHandler(
 
     private suspend fun handleCalculateScheduledRoomsAsync() {
         val count = schoolManager.calculateScheduledRoomsAsync()
-        println("🏫 Số phòng đang sử dụng: $count")
+        println("Số phòng đang sử dụng: $count")
     }
 
     private fun handleCancelSchedule() {
@@ -173,15 +169,10 @@ class MenuClassroomHandler(
         schoolManager.cancelSchedule(id)
     }
 
-//    private fun handleCreateSchedule() {
-//        schoolManager.createSchedule(DataClass.sampleSchedule2)
-//        println("Đã tạo lịch học mẫu")
-//    }
-
-    private fun handleCreateScheduleAsync() = runBlocking {
+    private suspend fun handleCreateScheduleAsync() = coroutineScope {
         println("Tạo lịch học mẫu")
         launch {
-            schoolManager.createScheduleAsync(this, DataClass.sampleSchedule2)
+            schoolManager.createScheduleAsync(DataClass.sampleSchedule2)
         }.join()
         println("Lịch học đã được tạo")
     }
@@ -203,7 +194,7 @@ class MenuClassroomHandler(
 
     private suspend fun creditsBySubject(courseId: Int) {
         coursesManager.creditsBySubject(courseId) { course ->
-            println("➡️ Môn học: ${course.courseName} có ${course.credit} tín chỉ.")
+            println("Môn học: ${course.courseName} có ${course.credit} tín chỉ.")
         }
     }
 
@@ -213,19 +204,86 @@ class MenuClassroomHandler(
 
     private suspend fun updateCourse(coursesManager: CoursesManager) {
         val id = InputHandler.getIntInput("Id môn học cần cập nhật")
-        val idCourse =coursesManager.getIdCourse(id)
-        if (idCourse ==id){
+        val idCourse = coursesManager.getIdCourse(id)
+        if (idCourse == id) {
             val course = InputHandler.getCourseInput()
             coursesManager.update(id, course)
-        }else{
+        } else {
             println("Không tìm thấy thông tin cần nhập ")
         }
-
     }
 
     private suspend fun deleteCourse(id: Int, coursesManager: CoursesManager) {
         coursesManager.delete(id)
+    }
 
+    // Các phương thức mới cho Classroom
+    private suspend fun handleGetAllClassrooms() {
+        schoolManager.getAllClassrooms()
+    }
+
+    private suspend fun handleGetClassroomById() {
+        val id = InputHandler.getIntInput("Nhập ID phòng học cần tìm:")
+        val classroom = schoolManager.getClassroomById(id)
+        if (classroom != null) {
+            println("Thông tin phòng học:")
+            println(classroom.displayInfo())
+        } else {
+            println("Không tìm thấy phòng học với ID: $id")
+        }
+    }
+
+    private suspend fun handleGetClassroomByName() {
+        val name = InputHandler.getStringInput("Nhập tên phòng học cần tìm:")
+        val classrooms = schoolManager.getClassroomByName(name)
+        if (classrooms.isNotEmpty()) {
+            println("Danh sách phòng học tìm thấy:")
+            classrooms.forEach { classroom ->
+                println(classroom.displayInfo())
+            }
+        } else {
+            println("Không tìm thấy phòng học với tên: $name")
+        }
+    }
+
+    private suspend fun handleDeleteClassroom() {
+        val id = InputHandler.getIntInput("Nhập ID phòng học cần xóa:")
+        schoolManager.deleteClassroom(id)
+    }
+
+    // Các phương thức mới cho Schedule
+    private suspend fun handleGetAllSchedules() {
+        schoolManager.getAllSchedules()
+    }
+
+    private suspend fun handleGetScheduleById() {
+        val id = InputHandler.getIntInput("Nhập ID lịch học cần tìm:")
+        val schedule = schoolManager.getScheduleById(id)
+        if (schedule != null) {
+            println("Thông tin lịch học:")
+            schedule.displaySchedule()
+        } else {
+            println("Không tìm thấy lịch học với ID: $id")
+        }
+    }
+
+    private suspend fun handleGetScheduleByName() {
+        val name = InputHandler.getStringInput("Nhập tên môn học hoặc giáo viên cần tìm:")
+        val schedules = schoolManager.getScheduleByName(name)
+        if (schedules.isNotEmpty()) {
+            println("Danh sách lịch học tìm thấy:")
+            schedules.forEachIndexed { index, schedule ->
+                println("${index + 1}. ")
+                schedule.displaySchedule()
+            }
+        } else {
+            println("Không tìm thấy lịch học với từ khóa: $name")
+        }
+    }
+
+
+    private suspend fun handleDeleteSchedule() {
+        val id = InputHandler.getIntInput("Nhập ID lịch học cần xóa:")
+        schoolManager.deleteSchedule(id)
     }
 }
-

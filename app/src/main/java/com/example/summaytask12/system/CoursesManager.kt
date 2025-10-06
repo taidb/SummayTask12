@@ -97,7 +97,7 @@ class CoursesManager : BaseInterface<Course> {
                 }
             }
         }
-
+        // đồng thời chạy
         normalJob.await()
         inlineJob.await()
     }

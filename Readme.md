@@ -79,6 +79,7 @@ Thống kê & Tính toán
 + Kiểm tra lớp còn trống
 
 Các kiến thức đã ứng dụng trong bài toán trên:
+
 **1. Cú pháp cơ bản của Kotlin**
 
 - Biến & Hằng số
@@ -145,5 +146,8 @@ forEach(), first(), last(), ...
 - Sealed Class & Enum Class
 - Generics (fun <T> add(a: T, b: T))
 
+Sơ đồ phân rã chức năng:
 ![img.png](img.png)
-![img_1.png](img_1.png)
+
+Sơ đồ UML:
+![img_2.png](img_2.png)

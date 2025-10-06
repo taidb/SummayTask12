@@ -3,7 +3,7 @@ package com.example.summaytask12.model
 import com.example.summaytask12.enum.StatusSchedule
 
 data class Classroom(
-    val roomId: String,
+    val roomId: Int,
     val roomNumber: String,
     val capacity: Int,
     val facilities: Set<String> = emptySet(),

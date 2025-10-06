@@ -2,30 +2,18 @@ package com.example.summaytask12.menu
 
 import com.example.summaytask12.system.DataClass.teachers
 import com.example.summaytask12.system.InputHandler
+import com.example.summaytask12.system.OutputHandler
 import com.example.summaytask12.system.TeachersManager
-import kotlinx.coroutines.runBlocking
 
 class MenuTeacherHandler(
     private val teachersManager: TeachersManager,
+    private val outputHandler: OutputHandler
 ) {
-    private fun displayMainTeacherMenu() {
-        println("\n=== HỆ THỐNG QUẢN LÝ GIÁO VIÊN TRƯỜNG HỌC ===")
-        println("1. In danh sách giáo viên")
-        println("2. Tiền lương từng giáo viên")
-        println("3. Lương giáo viên theo Id")
-        println("4. Môn học giáo viên dạy")
-        println("5. Kiểm tra đại học")
-        println("6.Tìm kiếm giáo viên theo tên")
-        println("7.Cập nhật thông tin thường gặp giáo viên")
-        println("8. Cập nhật thông tin")
-        println("9.Xóa giáo viên")
-        println("0. Thoát")
 
-    }
-    fun handleSelection() = runBlocking {
+   suspend fun handleSelection()  {
         var selection: Int
         do {
-            displayMainTeacherMenu()
+           outputHandler.displayMainTeacherMenu()
             print("Nhập lựa chọn: ")
             selection = InputHandler.getMenuSelection()
             println()

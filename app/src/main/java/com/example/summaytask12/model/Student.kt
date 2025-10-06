@@ -12,7 +12,7 @@ class Student(
     private val enrolledCourses = mutableListOf<Course>()
 
     init {
-        println("Họ tên: $name, Tuổi: $age , Mã sinh viên: $id")
+        println("Họ tên: $name, Tuổi: $age , Mã sinh viên: $id, GPA :$gpa")
     }
 
     //Vì trong class nó ko tự sinh ra toString nên cần override để nó có thể in ra sinh viên theo mẫu :

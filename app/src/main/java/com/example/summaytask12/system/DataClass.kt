@@ -40,23 +40,23 @@ object DataClass {
 
     val classrooms = listOf(
         Classroom(
-            "AAA",
+            110,
             "101",
             50,
             setOf("Máy chiếu", "Máy lạnh", "WiFi"),
             StatusSchedule.SCHEDULED
         ),
-        Classroom("BBB", "102", 40, setOf("Máy chiếu", "Máy lạnh"), StatusSchedule.SCHEDULED),
+        Classroom(111, "102", 40, setOf("Máy chiếu", "Máy lạnh"), StatusSchedule.SCHEDULED),
         Classroom(
-            "CCC",
+            112,
             "201",
             60,
             setOf("Máy tính", "Máy chiếu", "Máy lạnh", "WiFi"),
             StatusSchedule.CANCELED
         ),
-        Classroom("DDD", "202", 30, setOf("Máy chiếu"), StatusSchedule.CANCELED),
+        Classroom(113, "202", 30, setOf("Máy chiếu"), StatusSchedule.CANCELED),
         Classroom(
-            "KKK",
+            114,
             "203",
             20,
             setOf("Máy tính", "Thiết bị thí nghiệm", "Máy lạnh"),
