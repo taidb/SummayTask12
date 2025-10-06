@@ -1,9 +1,9 @@
 package com.example.summaytask12.menu
 
 import com.example.summaytask12.enum.AgeRange
-import com.example.summaytask12.system.DataClass.students
-import com.example.summaytask12.system.InputHandler
-import com.example.summaytask12.system.OutputHandler
+import com.example.summaytask12.data.DataClass.students
+import com.example.summaytask12.util.InputHandler
+import com.example.summaytask12.util.OutputHandler
 import com.example.summaytask12.system.StudentsManager
 
 class MenuStudentHandler(

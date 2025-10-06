@@ -6,8 +6,9 @@ import com.example.summaytask12.extensions.capitalizeFirst
 import com.example.summaytask12.generics.printInfo
 import com.example.summaytask12.interfaces.BaseInterface
 import com.example.summaytask12.model.Teacher
-import com.example.summaytask12.system.DataClass.courses
-import com.example.summaytask12.system.DataClass.students
+import com.example.summaytask12.data.DataClass
+import com.example.summaytask12.data.DataClass.courses
+import com.example.summaytask12.data.DataClass.students
 
 class TeachersManager : BaseInterface<Teacher> {
     private val teachers = mutableListOf<Teacher>()

@@ -1,4 +1,4 @@
-package com.example.summaytask12.system
+package com.example.summaytask12.util
 
 import com.example.summaytask12.extensions.isValidInt
 import com.example.summaytask12.extensions.isValidString
@@ -74,7 +74,7 @@ object InputHandler {
         val id = getIntInput("Nhập ID:")
         val name = getStringInput("Nhập tên:")
         val age = getIntInput("Nhập tuổi:")
-        val gpa=filterGPA()
+        val gpa= filterGPA()
         val address = getStringInput("Nhập địa chỉ:")
         return Student(id, name, age, gpa, address)
     }

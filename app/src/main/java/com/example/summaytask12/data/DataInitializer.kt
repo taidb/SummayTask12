@@ -1,4 +1,9 @@
-package com.example.summaytask12.system
+package com.example.summaytask12.data
+
+import com.example.summaytask12.system.CoursesManager
+import com.example.summaytask12.system.SchoolManager
+import com.example.summaytask12.system.StudentsManager
+import com.example.summaytask12.system.TeachersManager
 
 
 class DataInitializer(

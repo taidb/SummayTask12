@@ -1,4 +1,4 @@
-package com.example.summaytask12.system
+package com.example.summaytask12.util
 
 class OutputHandler {
     fun displayMainStudentMenu() {

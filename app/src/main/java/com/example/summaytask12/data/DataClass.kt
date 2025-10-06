@@ -1,4 +1,4 @@
-package com.example.summaytask12.system
+package com.example.summaytask12.data
 
 import com.example.summaytask12.enum.StatusSchedule
 import com.example.summaytask12.model.Classroom

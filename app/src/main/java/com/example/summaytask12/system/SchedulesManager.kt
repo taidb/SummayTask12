@@ -80,10 +80,9 @@ class SchedulesManager(private val classroomsManager: ClassroomManager) : BaseIn
         }
     }
 
-    // Các phương thức đặc thù cho Schedule
-    fun addSchedules(schedule: List<Schedule>) {
-        schedules.addAll(schedule)
-    }
+//    fun addSchedules(schedule: List<Schedule>) {
+//        schedules.addAll(schedule)
+//    }
 
     private fun createScheduleInternal(scheduleRequest: Schedule): Boolean {
         val existingClassroom = classroomsManager.getClassroomById(scheduleRequest.classroom.roomId)
@@ -151,9 +150,9 @@ class SchedulesManager(private val classroomsManager: ClassroomManager) : BaseIn
         cancelSchedule(scheduleId)
     }
 
-    fun getSchedules(): List<Schedule> {
-        return schedules.toList()
-    }
+//    fun getSchedules(): List<Schedule> {
+//        return schedules.toList()
+//    }
 
     // Coroutine functions
     suspend fun fetchSchedulesAsync(): List<Schedule> = withContext(Dispatchers.IO) {
