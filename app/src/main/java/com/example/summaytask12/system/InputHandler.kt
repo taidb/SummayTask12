@@ -10,9 +10,21 @@ object InputHandler {
         return readln().toIntOrNull() ?: 0
     }
 
+    private fun isValidInt(input: String): Boolean {
+        return input.matches(Regex("^\\d+$"))
+    }
+
     fun getIntInput(prompt: String): Int {
-        println(prompt)
-        return readln().toIntOrNull() ?: 0
+        while (true) {
+            print("$prompt: ")
+            val input = readln()
+
+            if (isValidInt(input)) {
+                return input.toInt()
+            } else {
+                println("Vui lòng nhập đúng định dạng số nguyên (chỉ chứa các chữ số)!")
+            }
+        }
     }
 
     fun getDoubleInput(prompt: String): Double {
@@ -25,50 +37,58 @@ object InputHandler {
     }
 
     fun getStringInput(prompt: String): String {
-        println(prompt)
-        return if (isValidString(readln())) {
-            readln()
-        } else {
-            println("Vui lòng nhập lại thông tin")
-            getStringInput(prompt)
+        while (true) {
+            println(prompt)
+            val inputString = readln()
+            if (isValidString(inputString)) {
+                return inputString
+            } else {
+                println("Vui lòng nhập lại thông tin")
+            }
         }
     }
 
     fun getStudentInput(): Student {
-        println("Nhập ID:")
-        val id = getIntInput("")
-        println("Nhập tên:")
-        val name = getStringInput("")
-        println("Nhập tuổi:")
-        val age = getIntInput("")
-        println("Nhập GPA:")
-        val gpa = getDoubleInput("")
-        println("Nhập địa chỉ:")
-        val address = getStringInput("")
+        val id = getIntInput("Nhập ID:")
+        val name = getStringInput("Nhập tên:")
+        val age = getIntInput("Nhập tuổi:")
+        val gpa: Double
+        while (true) {
+            val inputGpa = getDoubleInput("Nhập GPA (từ 0.0 đến 4.0)")
+            if (inputGpa in 0.0..4.0) {
+                gpa = inputGpa
+                break
+            } else {
+                println("GPA không hợp lệ. Vui lòng nhập một số trong khoảng từ 0.0 đến 4.0.")
+            }
+        }
+        val address = getStringInput("Nhập địa chỉ:")
         return Student(id, name, age, gpa, address)
     }
 
     fun getTeacherInput(): Teacher {
-        println("Nhập ID:")
-        val id = getIntInput("")
-        println("Nhập tên:")
-        val name = getStringInput("")
-        println("Nhập tuổi:")
-        val age = getIntInput("")
-        println("Nhập môn học giảng dạy:")
-        val subject = getStringInput("")
-        println("Nhập lương giáo viên:")
-        val salary = getDoubleInput("")
+        val id = getIntInput("Nhập ID:")
+        val name = getStringInput("Nhập tên:")
+        val age: Int
+        while (true) {
+            val inputAge = getIntInput("Nhập tuổi lớn hơn 0")
+            if (inputAge > 0) {
+                age = inputAge
+                break
+            } else {
+                println("Nhập tuổi lớn hơn 0")
+            }
+
+        }
+        val subject = getStringInput("Nhập môn học giảng dạy:")
+        val salary = getDoubleInput("Nhập lương giáo viên:")
         return Teacher(id, name, age, subject, salary)
     }
 
     fun getCourseInput(): Course {
-        println("Nhập ID:")
-        val id = getIntInput("")
-        println("Nhập tên môn học:")
-        val name = getStringInput("")
-        println("Nhập số tín:")
-        val credit = getIntInput("")
+        val id = getIntInput("Nhập ID:")
+        val name = getStringInput("Nhập tên môn học:")
+        val credit = getIntInput("Nhập số tín:")
         return Course(id, name, credit)
     }
 

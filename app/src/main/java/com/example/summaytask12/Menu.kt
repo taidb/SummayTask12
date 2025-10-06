@@ -39,7 +39,6 @@ fun main() {
         println("3.HỆ THỐNG QUẢN LÝ SINH VIÊN TRƯỜNG HỌC")
         println("0. Thoát")
         print("Nhập lựa chọn: ")
-        println("Nhập số cần biết thông tin:")
         selection = InputHandler.getMenuSelection()
         when (selection) {
             1 -> menuClassroomsHandler.handleSelection()

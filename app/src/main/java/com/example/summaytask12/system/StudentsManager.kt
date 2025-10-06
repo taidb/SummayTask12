@@ -241,7 +241,7 @@ class StudentsManager : BaseInterface<Student> {
 //        }
 //        println("Tổng số sinh viên: ${students.size} sinh viên")
         printInfo(students) { student ->
-            "${student.name} (ID: ${student.id}, GPA: ${student.gpa})"
+            "${student.name} (ID: ${student.id}, GPA: ${student.gpa}, Số tín chỉ: ${student.getTotalCredits()}, Quê quán: ${student.address}, tuổi : ${student.age})"
         }
     }
 
