@@ -1,5 +1,6 @@
 package com.example.summaytask12.system
 
+import com.example.summaytask12.enum.StatusSchedule
 import com.example.summaytask12.model.Classroom
 import com.example.summaytask12.model.Schedule
 
@@ -11,6 +12,13 @@ class SchoolManager {
     fun getClassrooms(): List<Classroom> = classroomsManager.getAllClassrooms()
     fun getClassroomsIsEmpty(condition: (Classroom) -> Boolean, action: (Classroom) -> Unit) =
         classroomsManager.getClassroomsIsEmpty(condition, action)
+
+    fun emptyClassrooms(classrooms: List<Classroom>, capacity: Int) =
+        classroomsManager.emptyClassrooms(
+            classrooms,
+            transform = { it.capacity > capacity },
+            condition = { it.status == StatusSchedule.CANCELED || it.status == StatusSchedule.DRUM }
+        )
 
     suspend fun getAllClassrooms() = classroomsManager.getAll()
     suspend fun getClassroomById(id: Int) = classroomsManager.getById(id)
@@ -27,8 +35,11 @@ class SchoolManager {
     suspend fun deleteSchedule(id: Int) = schedulesManager.delete(id)
 
     suspend fun fetchSchedulesAsync(): List<Schedule> = schedulesManager.fetchSchedulesAsync()
-    suspend fun createScheduleAsync(schedule: Schedule) = schedulesManager.createScheduleAsync(schedule)
-    suspend fun calculateScheduledRoomsAsync(): Int = schedulesManager.calculateScheduledRoomsAsync()
+    suspend fun createScheduleAsync(schedule: Schedule) =
+        schedulesManager.createScheduleAsync(schedule)
+
+    suspend fun calculateScheduledRoomsAsync(): Int =
+        schedulesManager.calculateScheduledRoomsAsync()
 
     companion object {
         const val MIN_GPA_FOR_GRADUATION = 2.0

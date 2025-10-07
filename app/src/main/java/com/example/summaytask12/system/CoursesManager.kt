@@ -1,8 +1,10 @@
 package com.example.summaytask12.system
 
+import com.example.summaytask12.generics.deleteItem
 import com.example.summaytask12.generics.measureExecutionTime
 import com.example.summaytask12.generics.measureExecutionTimeInline
 import com.example.summaytask12.generics.printInfo
+import com.example.summaytask12.generics.updateItem
 import com.example.summaytask12.interfaces.BaseInterface
 import com.example.summaytask12.model.Course
 import kotlinx.coroutines.Dispatchers
@@ -116,22 +118,24 @@ class CoursesManager : BaseInterface<Course> {
     }
 
     override suspend fun delete(id: Int) {
-        val removed = courses.removeIf { it.courseId == id }
-        if (removed) {
-            println("Đã xóa môn học có ID: $id")
-        } else {
-            println("Không tìm thấy môn học có ID: $id để xóa.")
-        }
+//        val removed = courses.removeIf { it.courseId == id }
+//        if (removed) {
+//            println("Đã xóa môn học có ID: $id")
+//        } else {
+//            println("Không tìm thấy môn học có ID: $id để xóa.")
+//        }
+        deleteItem(courses, id) { it.courseId}
     }
 
     override suspend fun update(id: Int, item: Course) {
-        val index = courses.indexOfFirst { it.courseId == id }
-        if (index != -1) {
-            courses[index] = item
-            println("Đã cập nhật môn học có ID: $id thành ${item.courseName}.")
-        } else {
-            println("Không tìm thấy môn học có ID: $id để cập nhật.")
-        }
+//        val index = courses.indexOfFirst { it.courseId == id }
+//        if (index != -1) {
+//            courses[index] = item
+//            println("Đã cập nhật môn học có ID: $id thành ${item.courseName}.")
+//        } else {
+//            println("Không tìm thấy môn học có ID: $id để cập nhật.")
+//        }
+        updateItem(courses, id, item) { it.courseId }
     }
 
     override suspend fun insert(item: List<Course>) {

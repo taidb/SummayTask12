@@ -8,7 +8,9 @@ import com.example.summaytask12.extensions.filterEligibleForGraduation
 import com.example.summaytask12.extensions.getGradeLevel
 import com.example.summaytask12.extensions.getTotalCredits
 import com.example.summaytask12.extensions.sortByGPADescending
+import com.example.summaytask12.generics.deleteItem
 import com.example.summaytask12.generics.printInfo
+import com.example.summaytask12.generics.updateItem
 import com.example.summaytask12.interfaces.BaseInterface
 import com.example.summaytask12.model.Student
 import com.example.summaytask12.sealed.StatusStudent
@@ -254,23 +256,25 @@ class StudentsManager : BaseInterface<Student> {
     }
 
     override suspend fun delete(id: Int) {
-        val student = getById(id)
-        if (student != null) {
-            students.remove(student)
-            println("Sinh viên ${student.name} đã được xóa khỏi danh sách.")
-        } else {
-            println("Không tìm thấy sinh viên với ID: $id")
-        }
+//        val student = getById(id)
+//        if (student != null) {
+//            students.remove(student)
+//            println("Sinh viên ${student.name} đã được xóa khỏi danh sách.")
+//        } else {
+//            println("Không tìm thấy sinh viên với ID: $id")
+//        }
+        deleteItem(students, id) { it.id }
     }
 
     override suspend fun update(id: Int, item: Student) {
-        val index = students.indexOfFirst { it.id == id }
-        if (index != -1) {
-            students[index] = item
-            println("Sinh viên có ID $id đã được cập nhật.")
-        } else {
-            println("Không tìm thấy sinh viên với ID: $id")
-        }
+//        val index = students.indexOfFirst { it.id == id }
+//        if (index != -1) {
+//            students[index] = item
+//            println("Sinh viên có ID $id đã được cập nhật.")
+//        } else {
+//            println("Không tìm thấy sinh viên với ID: $id")
+//        }
+        updateItem(students, id, item) { it.id }
 
     }
 

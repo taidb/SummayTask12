@@ -2,6 +2,7 @@ package com.example.summaytask12.system
 
 import com.example.summaytask12.enum.StatusSchedule
 import com.example.summaytask12.generics.genericsPrint
+import com.example.summaytask12.generics.printInfo
 import com.example.summaytask12.interfaces.BaseInterface
 import com.example.summaytask12.model.Schedule
 import kotlinx.coroutines.Dispatchers
@@ -18,8 +19,8 @@ class SchedulesManager(private val classroomsManager: ClassroomManager) : BaseIn
         withContext(Dispatchers.IO) {
             delay(150) // Giả lập thời gian truy vấn
             genericsPrint("Danh sách tất cả lịch học (${schedules.size} lịch):")
-            schedules.forEach { schedule ->
-                genericsPrint(" - ${schedule.course.courseName} (ID: ${schedule.id}) - GV: ${schedule.teacher.name} - Phòng: ${schedule.classroom.roomNumber}")
+            printInfo(schedules) { schedule ->
+                " - ${schedule.course.courseName} (ID: ${schedule.id}) - GV: ${schedule.teacher.name} - Phòng: ${schedule.classroom.roomNumber}"
             }
         }
     }
@@ -149,6 +150,7 @@ class SchedulesManager(private val classroomsManager: ClassroomManager) : BaseIn
     private fun cancelScheduleInternal(scheduleId: Int) {
         cancelSchedule(scheduleId)
     }
+
 
 //    fun getSchedules(): List<Schedule> {
 //        return schedules.toList()

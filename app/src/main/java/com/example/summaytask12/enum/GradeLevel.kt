@@ -5,5 +5,6 @@ enum class GradeLevel(val label: String, val minScore: Double, val maxScore: Dou
     GOOD("Giỏi", 3.2, 3.5),
     AVERAGE("Khá", 2.5, 3.1),
     BELOW_AVERAGE("Trung bình", 2.0, 2.4),
-    FAIL("Yếu", 0.0, 1.9)
+    FAIL("Yếu", 0.0, 1.9);
+
 }

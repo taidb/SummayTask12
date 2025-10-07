@@ -9,6 +9,8 @@ import com.example.summaytask12.model.Teacher
 import com.example.summaytask12.data.DataClass
 import com.example.summaytask12.data.DataClass.courses
 import com.example.summaytask12.data.DataClass.students
+import com.example.summaytask12.generics.deleteItem
+import com.example.summaytask12.generics.updateItem
 
 class TeachersManager : BaseInterface<Teacher> {
     private val teachers = mutableListOf<Teacher>()
@@ -93,7 +95,9 @@ class TeachersManager : BaseInterface<Teacher> {
         if (teacherId == null) {
             println("Vui lòng nhập lại thông tin")
         } else {
-            val user = teacherId.apply {
+            val user = teacherId.also {
+                println("Giáo viên trước khi apply: $it")
+            }.apply {
                 salary = salaryTeacher
                 subject = subjectTeacher
             }
@@ -108,7 +112,7 @@ class TeachersManager : BaseInterface<Teacher> {
             return
         }
         printInfo(teachers) { teacher ->
-            "${teacher.name.capitalizeFirst()} - ${teacher.subject} - ${teacher.salary}"
+            "${teacher.id} - ${teacher.name.capitalizeFirst()} - ${teacher.subject} - ${teacher.salary}"
         }
     }
 
@@ -126,21 +130,23 @@ class TeachersManager : BaseInterface<Teacher> {
     }
 
     override suspend fun update(id: Int, item: Teacher) {
-        val index = teachers.indexOfFirst { it.id == id }
-        if (index != -1) {
-            teachers[index] = item
-            println("Đã cập nhật thông tin giáo viên có ID: $id")
-        } else {
-            println("Không tìm thấy giáo viên có ID: $id để cập nhật.")
-        }
+//        val index = teachers.indexOfFirst { it.id == id }
+//        if (index != -1) {
+//            teachers[index] = item
+//            println("Đã cập nhật thông tin giáo viên có ID: $id")
+//        } else {
+//            println("Không tìm thấy giáo viên có ID: $id để cập nhật.")
+//        }
+        updateItem(teachers, id, item) { it.id }
     }
 
     override suspend fun delete(id: Int) {
-        val removed = teachers.removeIf { it.id == id }
-        if (removed) {
-            println("Đã xóa giáo viên có ID: $id")
-        } else {
-            println("Không tìm thấy giáo viên có ID: $id để xóa.")
-        }
+//        val removed = teachers.removeIf { it.id == id }
+//        if (removed) {
+//            println("Đã xóa giáo viên có ID: $id")
+//        } else {
+//            println("Không tìm thấy giáo viên có ID: $id để xóa.")
+//        }
+        deleteItem(teachers, id) { it.id }
     }
 }

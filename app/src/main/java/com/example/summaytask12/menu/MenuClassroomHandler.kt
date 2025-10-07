@@ -3,6 +3,7 @@ package com.example.summaytask12.menu
 import com.example.summaytask12.enum.StatusSchedule
 import com.example.summaytask12.system.CoursesManager
 import com.example.summaytask12.data.DataClass
+import com.example.summaytask12.model.Classroom
 import com.example.summaytask12.util.InputHandler
 import com.example.summaytask12.util.OutputHandler
 import com.example.summaytask12.system.SchoolManager
@@ -88,19 +89,23 @@ class MenuClassroomHandler(
                     handleDeleteClassroom()
                 }
 
-                17 -> {
-                    handleGetAllSchedules()
+                17->{
+                    printRoomsDemand(schoolManager.getClassrooms())
                 }
 
                 18 -> {
-                    handleGetScheduleById()
+                    handleGetAllSchedules()
                 }
 
                 19 -> {
-                    handleGetScheduleByName()
+                    handleGetScheduleById()
                 }
 
                 20 -> {
+                    handleGetScheduleByName()
+                }
+
+                21 -> {
                     handleDeleteSchedule()
                 }
 
@@ -286,4 +291,17 @@ class MenuClassroomHandler(
         val id = InputHandler.getIntInput("Nhập ID lịch học cần xóa:")
         schoolManager.deleteSchedule(id)
     }
+
+        private fun printRoomsDemand(classrooms: List<Classroom>){
+            val capacity =InputHandler.getIntInput("Nhập số lương người học: ")
+           val classroom= schoolManager.emptyClassrooms(classrooms,capacity)
+            if (classroom.isEmpty()){
+                println("Không có phòng học nào phù hơp")
+            }else{
+                classroom.forEach { room ->
+                    println("- Tên phòng: ${room.roomNumber}, sức chứa: ${room.capacity}, trạng thái: ${room.status}")
+                }
+            }
+        }
+
 }

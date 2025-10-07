@@ -41,16 +41,19 @@ class OutputHandler {
         println("10. In môn học có tín chỉ lớn hơn 3")
         println("11. Cập nhật thông tin môn học")
         println("12. Xóa môn hoc theo Id")
+
         println("QUẢN LÝ PHÒNG HỌC (CRUD)")
         println("13. Xem tất cả phòng học")
         println("14. Tìm phòng học theo ID")
         println("15. Tìm phòng học theo tên")
         println("16. Xóa phòng học")
+        println("17.Lớp học còn trống")
+
         println("QUẢN LÝ LỊCH HỌC")
-        println("17. Xem tất cả lịch học")
-        println("18. Tìm lịch học theo ID")
-        println("19. Tìm lịch học theo tên")
-        println("20. Xóa lịch học")
+        println("18. Xem tất cả lịch học")
+        println("19. Tìm lịch học theo ID")
+        println("20. Tìm lịch học theo tên")
+        println("21. Xóa lịch học")
         println("0. Thoát")
     }
 
