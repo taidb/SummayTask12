@@ -1,4 +1,4 @@
-package com.example.summaytask12.extensions
+package com.example.summaytask12.core.extensions
 
 import com.example.summaytask12.model.Student
 import kotlin.collections.List

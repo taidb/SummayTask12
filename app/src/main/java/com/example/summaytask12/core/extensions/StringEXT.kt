@@ -1,4 +1,4 @@
-package com.example.summaytask12.extensions
+package com.example.summaytask12.core.extensions
 
 fun String.capitalizeFirst(): String {
     val nameParts = this.split(" ")

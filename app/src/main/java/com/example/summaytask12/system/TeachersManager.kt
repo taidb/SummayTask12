@@ -1,16 +1,16 @@
 package com.example.summaytask12.system
 
-import com.example.summaytask12.generics.addItem
-import com.example.summaytask12.extensions.calculateAnnualSalary
-import com.example.summaytask12.extensions.capitalizeFirst
-import com.example.summaytask12.generics.printInfo
-import com.example.summaytask12.interfaces.BaseInterface
+import com.example.summaytask12.core.generics.addItem
+import com.example.summaytask12.core.extensions.calculateAnnualSalary
+import com.example.summaytask12.core.extensions.capitalizeFirst
+import com.example.summaytask12.core.generics.printInfo
+import com.example.summaytask12.core.interfaces.BaseInterface
 import com.example.summaytask12.model.Teacher
 import com.example.summaytask12.data.DataClass
 import com.example.summaytask12.data.DataClass.courses
 import com.example.summaytask12.data.DataClass.students
-import com.example.summaytask12.generics.deleteItem
-import com.example.summaytask12.generics.updateItem
+import com.example.summaytask12.core.generics.deleteItem
+import com.example.summaytask12.core.generics.updateItem
 
 class TeachersManager : BaseInterface<Teacher> {
     private val teachers = mutableListOf<Teacher>()

@@ -1,11 +1,11 @@
 package com.example.summaytask12.system
 
-import com.example.summaytask12.generics.deleteItem
-import com.example.summaytask12.generics.measureExecutionTime
-import com.example.summaytask12.generics.measureExecutionTimeInline
-import com.example.summaytask12.generics.printInfo
-import com.example.summaytask12.generics.updateItem
-import com.example.summaytask12.interfaces.BaseInterface
+import com.example.summaytask12.core.generics.deleteItem
+import com.example.summaytask12.core.generics.measureExecutionTime
+import com.example.summaytask12.core.generics.measureExecutionTimeInline
+import com.example.summaytask12.core.generics.printInfo
+import com.example.summaytask12.core.generics.updateItem
+import com.example.summaytask12.core.interfaces.BaseInterface
 import com.example.summaytask12.model.Course
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async

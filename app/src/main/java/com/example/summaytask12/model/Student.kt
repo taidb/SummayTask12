@@ -1,6 +1,6 @@
 package com.example.summaytask12.model
 
-import com.example.summaytask12.interfaces.Enrollable
+import com.example.summaytask12.core.interfaces.Enrollable
 
 class Student(
     id: Int,

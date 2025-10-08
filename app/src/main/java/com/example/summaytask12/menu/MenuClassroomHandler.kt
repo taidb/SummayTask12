@@ -1,11 +1,11 @@
 package com.example.summaytask12.menu
 
-import com.example.summaytask12.enum.StatusSchedule
+import com.example.summaytask12.core.enum.StatusSchedule
 import com.example.summaytask12.system.CoursesManager
 import com.example.summaytask12.data.DataClass
 import com.example.summaytask12.model.Classroom
-import com.example.summaytask12.util.InputHandler
-import com.example.summaytask12.util.OutputHandler
+import com.example.summaytask12.utils.InputHandler
+import com.example.summaytask12.utils.OutputHandler
 import com.example.summaytask12.system.SchoolManager
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch

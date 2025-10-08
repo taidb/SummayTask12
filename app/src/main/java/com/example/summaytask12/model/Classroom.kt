@@ -1,6 +1,6 @@
 package com.example.summaytask12.model
 
-import com.example.summaytask12.enum.StatusSchedule
+import com.example.summaytask12.core.enum.StatusSchedule
 
 data class Classroom(
     val roomId: Int,

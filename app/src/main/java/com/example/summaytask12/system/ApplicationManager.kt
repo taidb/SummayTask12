@@ -4,8 +4,8 @@ import com.example.summaytask12.data.DataInitializer
 import com.example.summaytask12.menu.MenuClassroomHandler
 import com.example.summaytask12.menu.MenuStudentHandler
 import com.example.summaytask12.menu.MenuTeacherHandler
-import com.example.summaytask12.util.InputHandler
-import com.example.summaytask12.util.OutputHandler
+import com.example.summaytask12.utils.InputHandler
+import com.example.summaytask12.utils.OutputHandler
 
 class ApplicationManager {
     private val coursesManager = CoursesManager()

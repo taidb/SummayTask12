@@ -1,4 +1,4 @@
-package com.example.summaytask12.interfaces
+package com.example.summaytask12.core.interfaces
 
 interface BaseInterface<T> {
     suspend fun getAll()

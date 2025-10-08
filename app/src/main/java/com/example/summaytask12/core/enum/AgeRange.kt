@@ -1,4 +1,4 @@
-package com.example.summaytask12.enum
+package com.example.summaytask12.core.enum
 
 enum class AgeRange(val label: String) {
     YOUNG("Dưới 18"),

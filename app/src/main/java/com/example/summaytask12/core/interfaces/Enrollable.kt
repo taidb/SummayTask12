@@ -1,4 +1,4 @@
-package com.example.summaytask12.interfaces
+package com.example.summaytask12.core.interfaces
 
 import com.example.summaytask12.model.Course
 

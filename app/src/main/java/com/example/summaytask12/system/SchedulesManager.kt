@@ -1,9 +1,9 @@
 package com.example.summaytask12.system
 
-import com.example.summaytask12.enum.StatusSchedule
-import com.example.summaytask12.generics.genericsPrint
-import com.example.summaytask12.generics.printInfo
-import com.example.summaytask12.interfaces.BaseInterface
+import com.example.summaytask12.core.enum.StatusSchedule
+import com.example.summaytask12.core.generics.genericsPrint
+import com.example.summaytask12.core.generics.printInfo
+import com.example.summaytask12.core.interfaces.BaseInterface
 import com.example.summaytask12.model.Schedule
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async

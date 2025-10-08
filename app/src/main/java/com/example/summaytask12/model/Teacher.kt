@@ -1,6 +1,6 @@
 package com.example.summaytask12.model
 
-import com.example.summaytask12.interfaces.Gradable
+import com.example.summaytask12.core.interfaces.Gradable
 
 class Teacher(
     id: Int,

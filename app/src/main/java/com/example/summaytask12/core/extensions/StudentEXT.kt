@@ -1,6 +1,6 @@
-    package com.example.summaytask12.extensions
+    package com.example.summaytask12.core.extensions
 
-    import com.example.summaytask12.enum.GradeLevel
+    import com.example.summaytask12.core.enum.GradeLevel
     import com.example.summaytask12.model.Student
 
 

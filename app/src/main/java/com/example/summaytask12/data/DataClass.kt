@@ -1,6 +1,6 @@
 package com.example.summaytask12.data
 
-import com.example.summaytask12.enum.StatusSchedule
+import com.example.summaytask12.core.enum.StatusSchedule
 import com.example.summaytask12.model.Classroom
 import com.example.summaytask12.model.Course
 import com.example.summaytask12.model.Schedule

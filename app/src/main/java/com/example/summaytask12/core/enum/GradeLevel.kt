@@ -1,4 +1,4 @@
-package com.example.summaytask12.enum
+package com.example.summaytask12.core.enum
 
 enum class GradeLevel(val label: String, val minScore: Double, val maxScore: Double) {
     EXCELLENT("Xuất sắc", 3.6, 4.0),

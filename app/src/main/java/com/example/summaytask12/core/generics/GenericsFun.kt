@@ -1,4 +1,4 @@
-package com.example.summaytask12.generics
+package com.example.summaytask12.core.generics
 
 fun <T> genericsPrint(value: T) {
     println(value)

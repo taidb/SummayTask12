@@ -1,7 +1,7 @@
-package com.example.summaytask12.util
+package com.example.summaytask12.utils
 
-import com.example.summaytask12.extensions.isValidInt
-import com.example.summaytask12.extensions.isValidString
+import com.example.summaytask12.core.extensions.isValidInt
+import com.example.summaytask12.core.extensions.isValidString
 import com.example.summaytask12.model.Course
 import com.example.summaytask12.model.Student
 import com.example.summaytask12.model.Teacher
